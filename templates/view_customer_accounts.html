@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Accounts and Subscribed Plans</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <h1>Customer Accounts and Subscribed Plans</h1>
+    <table border="1">
+        <tr>
+            <th>Account ID</th>
+            <th>Customer Name</th>
+            <th>Plan Name</th>
+            <th>Status</th>
+        </tr>
+        {% if accounts %}
+            {% for account in accounts %}
+            <tr>
+                <td>{{ account.id }}</td>
+                <td>{{ account.customer_name }}</td>
+                <td>{{ account.plan_name }}</td>
+                <td>{{ account.status }}</td>
+            </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="4">No account data available.</td>
+            </tr>
+        {% endif %}
+    </table>
+    <a href="/admin" class="btn btn-primary">Back to Admin Dashboard</a>
+</body>
+</html>

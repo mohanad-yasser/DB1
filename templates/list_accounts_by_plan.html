@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List Accounts by Plan ID and Date</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <h1>List Customer Accounts by Plan ID and Date</h1>
+    
+    <form method="post">
+        <label for="plan_id">Plan ID:</label>
+        <input type="text" id="plan_id" name="plan_id" required>
+        
+        <label for="date">Date:</label>
+        <input type="date" id="date" name="date" required>
+        
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+
+    <div style="margin-top: 20px;">
+        <a href="/admin" class="btn btn-primary">Back to Admin Dashboard</a>
+    </div>
+
+    {% if accounts is not none %}
+    <h2>Results</h2>
+    <table border="1">
+        <tr>
+            <th>Account ID</th>
+            <th>Customer Name</th>
+            <th>Plan Name</th>
+            <th>Subscription Date</th>
+        </tr>
+        {% if accounts %}
+            {% for account in accounts %}
+            <tr>
+                <td>{{ account.id }}</td>
+                <td>{{ account.customer_name }}</td>
+                <td>{{ account.plan_name }}</td>
+                <td>{{ account.subscription_date }}</td>
+            </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="4">No accounts found for the given plan ID and date.</td>
+            </tr>
+        {% endif %}
+    </table>
+    {% endif %}
+</body>
+</html>

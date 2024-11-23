@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Physical Stores</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <h1>Physical Stores and Redeemed Vouchers</h1>
+    <table border="1">
+        <tr>
+            <th>Store ID</th>
+            <th>Store Name</th>
+            <th>Redeemed Voucher IDs</th>
+            <th>Voucher Values</th>
+        </tr>
+        {% if stores %}
+            {% for store in stores %}
+            <tr>
+                <td>{{ store.id }}</td>
+                <td>{{ store.name }}</td>
+                <td>{{ store.voucher_ids }}</td>
+                <td>{{ store.voucher_values }}</td>
+            </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="4">No store data available.</td>
+            </tr>
+        {% endif %}
+    </table>
+    <a href="/admin" class="btn btn-primary">Back to Admin Dashboard</a>
+</body>
+</html>

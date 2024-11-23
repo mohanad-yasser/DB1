@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title text-center">Login</h3>
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                          {% if messages %}
+                            {% for category, message in messages %}
+                              <div class="alert alert-{{ category }}" role="alert">
+                                {{ message }}
+                              </div>
+                            {% endfor %}
+                          {% endif %}
+                        {% endwith %}
+                        <form action="/login" method="post">
+                            <div class="mb-3">
+                                <label for="login-type" class="form-label">Login as</label>
+                                <select class="form-select" id="login-type" name="login_type" required>
+                                    <option value="admin">Admin</option>
+                                    <option value="customer">Customer</option>
+                                </select>
+                            </div>
+                            <div class="mb-3" id="admin-fields">
+                                <label for="admin-id" class="form-label">Admin ID</label>
+                                <input type="text" class="form-control" id="admin-id" name="admin_id">
+                            </div>
+                            <div class="mb-3" id="customer-fields" style="display: none;">
+                                <label for="mobile-number" class="form-label">Mobile Number</label>
+                                <input type="text" class="form-control" id="mobile-number" name="mobile_number">
+                            </div>
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="password" name="password" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Login</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('login-type').addEventListener('change', function() {
+            const loginType = this.value;
+            const adminFields = document.getElementById('admin-fields');
+            const customerFields = document.getElementById('customer-fields');
+
+            if (loginType === 'admin') {
+                adminFields.style.display = 'block';
+                customerFields.style.display = 'none';
+            } else if (loginType === 'customer') {
+                adminFields.style.display = 'none';
+                customerFields.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

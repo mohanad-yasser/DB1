@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMS Offers for Account</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <h1>List SMS Offers for an Account</h1>
+
+    <form method="post">
+        <label for="account_id">Account ID:</label>
+        <input type="text" id="account_id" name="account_id" required>
+        
+        <button type="submit" class="btn btn-primary">Search Offers</button>
+    </form>
+
+    {% if sms_offers is not none %}
+    <h2>SMS Offers</h2>
+    <table border="1">
+        <tr>
+            <th>Offer ID</th>
+            <th>Offer Description</th>
+        </tr>
+        {% if sms_offers %}
+            {% for offer in sms_offers %}
+            <tr>
+                <td>{{ offer.id }}</td>
+                <td>{{ offer.description }}</td>
+            </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="2">No SMS offers found for the given account.</td>
+            </tr>
+        {% endif %}
+    </table>
+    {% endif %}
+
+    <div style="margin-top: 20px;">
+        <a href="/admin" class="btn btn-primary">Back to Admin Dashboard</a>
+    </div>
+</body>
+</html>
