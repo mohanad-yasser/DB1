@@ -3,46 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Account Usage Details</title>
+    <title>Account Usage Report</title>
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
-    <h1>Account Usage Details</h1>
+    <h1>Account Usage Report</h1>
     
-    <form method="post">
-        <label for="account_id">Account ID:</label>
-        <input type="text" id="account_id" name="account_id" required>
+    <!-- Form to input mobile number and start date -->
+    <form method="POST" action="{{ url_for('show_account_usage') }}">
+        <label for="mobile_number">Mobile Number:</label>
+        <input type="text" name="mobile_number" id="mobile_number" value="{{ mobile_number if mobile_number else '' }}" required>
         
-        <label for="date">Start Date:</label>
-        <input type="date" id="date" name="date" required>
+        <!-- The date input should be handled as a text to allow flexible format handling -->
+        <label for="start_date">Start Date (DD-MM-YYYY):</label>
+        <input type="text" name="start_date" id="start_date" placeholder="DD-MM-YYYY" value="{{ start_date if start_date else '' }}" required pattern="\d{2}-\d{2}-\d{4}">
         
-        <button type="submit" class="btn btn-primary">Show Usage</button>
+        <button type="submit">Get Usage Report</button>
     </form>
 
-    {% if usage is not none %}
-    <h2>Usage Details</h2>
+    <!-- Table to display the usage data -->
     <table border="1">
         <tr>
-            <th>Plan Name</th>
-            <th>Total Usage</th>
+            <th>Plan ID</th>
+            <th>Total Data (MB)</th>
+            <th>Total Minutes</th>
+            <th>Total SMS</th>
         </tr>
-        {% if usage %}
-            {% for detail in usage %}
+        {% if usage_data %}
+            {% for usage in usage_data %}
             <tr>
-                <td>{{ detail.plan_name }}</td>
-                <td>{{ detail.total_usage }}</td>
+                <td>{{ usage.planID }}</td>
+                <td>{{ usage.total_data }}</td>
+                <td>{{ usage.total_mins }}</td>
+                <td>{{ usage.total_sms }}</td>
             </tr>
             {% endfor %}
         {% else %}
             <tr>
-                <td colspan="2">No usage data found for the given account and date.</td>
+                <td colspan="4">No usage data available for the provided inputs.</td>
             </tr>
         {% endif %}
     </table>
-    {% endif %}
 
-    <div style="margin-top: 20px;">
-        <a href="/admin" class="btn btn-primary">Back to Admin Dashboard</a>
-    </div>
+    <a href="/admin" class="btn btn-primary">Back to Admin Dashboard</a>
 </body>
 </html>

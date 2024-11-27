@@ -11,20 +11,20 @@
     <table border="1">
         <tr>
             <th>Ticket ID</th>
-            <th>Customer Name</th>
-            <th>Issue</th>
-            <th>Resolution Details</th>
+            <th>Mobile Number</th>
+            <th>Issue Description</th>
+            <th>Priority Level</th>
         </tr>
         {% if tickets %}
             {% for ticket in tickets %}
             <tr>
-                <td>{{ ticket.id }}</td>
-                <td>{{ ticket.customer_name }}</td>
-                <td>{{ ticket.issue }}</td>
-                <td>{{ ticket.resolution }}</td>
+                <td>{{ ticket.ticketID}}</td> <!-- Ensure this matches the returned column name -->
+                <td>{{ ticket.mobileNo }}</td> <!-- Ensure this matches the returned column name -->
+                <td>{{ ticket.issue_description }}</td> <!-- Ensure this matches the returned column name -->
+                <td>{{ ticket.priority_level }}</td> <!-- Ensure this matches the returned column name -->
             </tr>
             {% endfor %}
-        {% else %}
+        {% else %} 
             <tr>
                 <td colspan="4">No resolved tickets available.</td>
             </tr>

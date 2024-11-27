@@ -9,20 +9,40 @@
 <body>
     <h1>Customer Profiles</h1>
     <table border="1">
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Account</th>
-            <th>Plan</th>
-        </tr>
-        {% for customer in customers %}
-        <tr>
-            <td>{{ customer.id }}</td>
-            <td>{{ customer.name }}</td>
-            <td>{{ customer.account }}</td>
-            <td>{{ customer.plan }}</td>
-        </tr>
-        {% endfor %}
+        <thead>
+            <tr>
+                <th>National ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Address</th>
+                <th>Date of Birth</th>
+                <th>Mobile Number</th>
+                <th>Account Type</th>
+                <th>Account Status</th>
+                <th>Start Date</th>
+                <th>Balance</th>
+                <th>Points</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for customer in customers %}
+            <tr>
+                <td>{{ customer.nationalID }}</td>
+                <td>{{ customer.first_name }}</td>
+                <td>{{ customer.last_name }}</td>
+                <td>{{ customer.email }}</td>
+                <td>{{ customer.address }}</td>
+                <td>{{ customer.date_of_birth }}</td>
+                <td>{{ customer.mobileNo }}</td>
+                <td>{{ customer.account_type }}</td>
+                <td>{{ customer.status }}</td>
+                <td>{{ customer.start_date }}</td>
+                <td>{{ customer.balance }}</td>
+                <td>{{ customer.points }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
     </table>
     <a href="/admin" class="btn btn-primary">Back to Admin Dashboard</a>
 </body>

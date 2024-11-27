@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Physical Stores</title>
+    <title>Physical Stores and Redeemed Vouchers</title>
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
@@ -11,22 +11,24 @@
     <table border="1">
         <tr>
             <th>Store ID</th>
-            <th>Store Name</th>
-            <th>Redeemed Voucher IDs</th>
-            <th>Voucher Values</th>
+            <th>Store Address</th>
+            <th>Working Hours</th>
+            <th>Voucher ID</th>
+            <th>Voucher Value</th>
         </tr>
         {% if stores %}
             {% for store in stores %}
             <tr>
-                <td>{{ store.id }}</td>
-                <td>{{ store.name }}</td>
-                <td>{{ store.voucher_ids }}</td>
-                <td>{{ store.voucher_values }}</td>
+                <td>{{ store.shopID }}</td>
+                <td>{{ store.address }}</td>
+                <td>{{ store.working_hours }}</td>
+                <td>{{ store.voucherID }}</td>
+                <td>{{ store.value }}</td>
             </tr>
             {% endfor %}
         {% else %}
             <tr>
-                <td colspan="4">No store data available.</td>
+                <td colspan="5">No store data available.</td>
             </tr>
         {% endif %}
     </table>

@@ -3,24 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Remove Benefits</title>
-    <link rel="stylesheet" href="/static/css/style.css">
+    <title>Remove Benefits for Account and Plan</title>
+    <link rel="stylesheet" href="/static/css/style.css"> <!-- Reference to the main CSS file -->
 </head>
 <body>
-    <h1>Remove Benefits from Account</h1>
 
-    <form method="post">
-        <label for="account_id">Account ID:</label>
-        <input type="text" id="account_id" name="account_id" required>
-        
+    <h1>Remove Benefits for Account and Plan</h1>
+
+    <!-- Form to input mobile number and plan ID -->
+    <form method="POST" action="{{ url_for('remove_benefits') }}">
+        <label for="mobile_number">Mobile Number:</label>
+        <input type="text" id="mobile_number" name="mobile_number" placeholder="Enter Mobile Number" required>
+
         <label for="plan_id">Plan ID:</label>
-        <input type="text" id="plan_id" name="plan_id" required>
-        
-        <button type="submit" class="btn btn-primary">Remove Benefits</button>
+        <input type="text" id="plan_id" name="plan_id" placeholder="Enter Plan ID" required>
+
+        <button type="submit">Remove Benefits</button>
     </form>
 
-    <div style="margin-top: 20px;">
-        <a href="/admin" class="btn btn-primary">Back to Admin Dashboard</a>
-    </div>
+    <!-- Display flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="flash-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <a href="/admin" class="btn btn-primary">Back to Admin Dashboard</a>
+
 </body>
 </html>
