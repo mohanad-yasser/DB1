@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cashback Amount by Wallet and Plan</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+    <h1>View Cashback Amount by Wallet ID and Plan ID</h1>
+
+    <!-- Form to input Wallet ID and Plan ID -->
+    <form method="POST">
+        <label for="wallet_id">Enter Wallet ID:</label>
+        <input type="text" id="wallet_id" name="wallet_id" required><br><br>
+
+        <label for="plan_id">Enter Plan ID:</label>
+        <input type="text" id="plan_id" name="plan_id" required><br><br>
+
+        <button type="submit">Fetch Cashback Amount</button>
+    </form>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul>
+                {% for category, message in messages %}
+                    <li class="flash-message {{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    {% if cashback_amount is not none %}
+        <table border="1" style="margin-top: 20px; width: 50%; margin-left: auto; margin-right: auto;">
+            <tr>
+                <th>Cashback Amount</th>
+            </tr>
+            <tr>
+                <td>{{ cashback_amount }}</td>
+            </tr>
+        </table>
+    {% else %}
+        <p>No data available for this wallet ID and plan ID combination.</p>
+    {% endif %}
+
+    <a href="/admin" class="btn btn-primary">Back to Admin Dashboard</a>
+
+</body>
+</html>

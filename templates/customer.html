@@ -4,12 +4,136 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Customer Dashboard</title>
-    <link rel="stylesheet" href="/static/css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEJuf+5T+5ZB82gttA5nv7v1G+FtxD5YO0d5p5P2dkOGz4HjTDCy7v5mI5pVm" crossorigin="anonymous">
+    <style>
+        /* General Styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+        }
+        h1, p {
+            text-align: center;
+            color: #343a40;
+        }
+
+        /* Card Styling */
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .card-body {
+            text-align: center;
+            padding: 30px 20px;
+        }
+        .card-title {
+            font-weight: 600;
+            font-size: 1.5rem;
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+
+        /* Button Styling */
+        .btn-custom {
+            width: auto;
+            padding: 10px 20px;
+            font-size: 1rem;
+            margin: 10px 0;
+            text-align: center;
+        }
+        .btn-custom:hover {
+            background-color: #007bff;
+            color: white;
+            transform: scale(1.05);
+            transition: 0.3s;
+        }
+
+        /* Grouping and Layout */
+        .container {
+            margin-top: 30px;
+        }
+        .row {
+            margin-top: 20px;
+        }
+        .col-md-4 {
+            margin-bottom: 15px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .card-body {
+                padding: 20px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>Customer Dashboard</h1>
-    <p>View your customer data here.</p>
-    <a href="/">Back to Home</a>
+
+    <div class="container">
+        <h1>Customer Dashboard</h1>
+        <p>Manage your account information and view usage here.</p>
+
+        <!-- Row for Customer Services -->
+        <div class="row">
+            <!-- Service Plans -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Service Plans</h5>
+                        <button onclick="location.href='/view_service_plans'" class="btn btn-primary btn-custom">View Service Plans</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Account Usage -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Account Usage</h5>
+                        <button onclick="location.href='/view_account_usage'" class="btn btn-primary btn-custom">View Account Usage</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Consumption Data -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Consumption Data</h5>
+                        <button onclick="location.href='/view_consumption'" class="btn btn-primary btn-custom">View Consumption</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row for Plan and Cashback -->
+        <div class="row">
+            <!-- Unsubscribed Plans -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Unsubscribed Plans</h5>
+                        <button onclick="location.href='/view_unsubscribed_plans'" class="btn btn-primary btn-custom">View Unsubscribed Plans</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cashback Transactions -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Cashback Transactions</h5>
+                        <button onclick="location.href='/view_customer_cashbacks'" class="btn btn-primary btn-custom">View Cashback Transactions</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz4fnFO9gyb1WL1yI6K8L6T4ol3D02MAtSkvWb6u3rjLR+qJ7ZT58dVmQ5" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js" integrity="sha384-pzjw8f+ua7Kw1TIq0p2p+z57B/Z6K2J3xlW9rdD5/8o28gXO9IqlD8M9n6G6xI5t" crossorigin="anonymous"></script>
+
 </body>
 </html>
-

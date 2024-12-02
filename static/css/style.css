@@ -1,3 +1,4 @@
+/* Global Styles */
 body {
     font-family: Arial, sans-serif;
     text-align: center;
@@ -9,16 +10,34 @@ h1 {
     color: #007bff;
 }
 
-nav a {
-    margin: 10px;
+table {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 8px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+a {
     text-decoration: none;
     color: #007bff;
 }
 
-nav a:hover {
+a:hover {
     text-decoration: underline;
 }
 
+/* Button Styles */
 .btn-primary, .btn-secondary {
     padding: 10px 20px;
     border: none;
@@ -43,4 +62,34 @@ nav a:hover {
 
 .btn-secondary:hover {
     background-color: #5a6268;
+}
+
+/* Table Customization */
+table {
+    width: 80%;
+    margin: 20px auto;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+th {
+    background-color: #007bff;
+    color: white;
+}
+
+td {
+    background-color: #f9f9f9;
+}
+
+tr:nth-child(even) td {
+    background-color: #f2f2f2;
+}
+
+tr:hover {
+    background-color: #f1f1f1;
 }

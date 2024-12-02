@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Cashback Transactions</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+    <h1>View Cashback Transactions</h1>
+
+    <!-- Form to input National ID -->
+    <form method="POST">
+        <label for="national_id">Enter National ID:</label>
+        <input type="text" id="national_id" name="national_id" required><br><br>
+        <button type="submit">Fetch Cashback Transactions</button>
+    </form>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul>
+                {% for category, message in messages %}
+                    <li class="flash-message {{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    {% if cashback_transactions %}
+        <!-- Display cashback transactions in a table -->
+        <table border="1" style="margin-top: 20px; width: 80%; margin-left: auto; margin-right: auto;">
+            <thead>
+                <tr>
+                    <th>cashbackID</th>
+                    <th>benefitID</th>
+                    <th>walletID</th>
+                    <th>amount</th>
+                    <th>credit date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for transaction in cashback_transactions %}
+                    <tr>
+                        <td>{{ transaction.transaction_id }}</td>
+                        <td>{{ transaction.wallet_id }}</td>
+                        <td>{{ transaction.amount }}</td>
+                        <td>{{ transaction.transaction_date }}</td>
+                        <td>{{ transaction.description }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No cashback transactions available for this National ID.</p>
+    {% endif %}
+
+    <a href="/customer" class="btn btn-primary">Back to Customer Dashboard</a>
+
+</body>
+</html>

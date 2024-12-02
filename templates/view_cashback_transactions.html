@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cashback Transactions per Wallet</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <h1>Total Cashback Transactions per Wallet</h1>
+
+    <!-- Table to display cashback transaction counts per wallet ID -->
+    <table border="1" style="margin-top: 20px; width: 80%; margin-left: auto; margin-right: auto;">
+        <tr>
+            <th>Wallet ID</th>
+            <th>Number of Cashback Transactions</th>
+        </tr>
+        {% if cashback_counts %}
+            {% for transaction in cashback_counts %}
+                <tr>
+                    <td>{{ transaction.walletID }}</td>
+                    <td>{{ transaction['count of transactions'] }}</td>
+                </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="2">No cashback transactions found.</td>
+            </tr>
+        {% endif %}
+    </table>
+
+    <!-- Back to Admin Dashboard Button -->
+    <a href="/admin" class="btn btn-primary">Back to Admin Dashboard</a>
+</body>
+</html>

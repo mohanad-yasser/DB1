@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Transactions & Points</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+    <h1>Payment Transactions and Points for Wallet</h1>
+
+    <!-- Form to input mobile number -->
+    <form method="POST">
+        <label for="mobile_num">Enter Mobile Number:</label>
+        <input type="text" id="mobile_num" name="mobile_num" required>
+        <button type="submit">Fetch Data</button>
+    </form>
+
+    <!-- Flash messages for success/error -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul>
+                {% for category, message in messages %}
+                    <li class="flash-message {{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Only display data if available -->
+    {% if payment_count is not none and total_points is not none %}
+        <table border="1" style="margin-top: 20px; width: 80%; margin-left: auto; margin-right: auto;">
+            <tr>
+                <th>Number of Successful Payments</th>
+                <th>Total Points Earned</th>
+            </tr>
+            <tr>
+                <td>{{ payment_count }}</td>
+                <td>{{ total_points }}</td>
+            </tr>
+        </table>
+    {% elif payment_count is none %}
+        <p>No data available for this mobile number.</p>
+    {% endif %}
+
+    <!-- Back to Admin Dashboard -->
+    <a href="/admin" class="btn btn-primary">Back to Admin Dashboard</a>
+
+</body>
+</html>

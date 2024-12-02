@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All E-shops and Redeemed Vouchers</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <h1>All E-shops and Redeemed Vouchers</h1>
+
+    <!-- Table to display E-shop details with redeemed vouchers -->
+    <table border="1" style="margin-top: 20px; width: 80%; margin-left: auto; margin-right: auto;">
+        <tr>
+            <th>Shop ID</th>
+            <th>URL</th>
+            <th>Rating</th>
+            <th>Voucher ID</th>
+            <th>Voucher Value</th>
+        </tr>
+        {% if eshops %}
+            {% for shop in eshops %}
+                <tr>
+                    <td>{{ shop.shopID }}</td>
+                    <td>{{ shop.URL }}</td>
+                    <td>{{ shop.rating }}</td>
+                    <td>{{ shop.voucherID }}</td>
+                    <td>{{ shop.value }}</td>
+                </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="5">No E-shops or vouchers found.</td>
+            </tr>
+        {% endif %}
+    </table>
+
+    <!-- Back to Admin Dashboard Button -->
+    <a href="/admin" class="btn btn-primary">Back to Admin Dashboard</a>
+</body>
+</html>

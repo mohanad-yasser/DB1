@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Account Usage</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+    <h1>View Active Plan Usage for Current Month</h1>
+
+    <!-- Form to input Mobile Number -->
+    <form method="POST">
+        <label for="mobile_num">Enter Mobile Number:</label>
+        <input type="text" id="mobile_num" name="mobile_num" required><br><br>
+        <button type="submit">Fetch Usage Data</button>
+    </form>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul>
+                {% for category, message in messages %}
+                    <li class="flash-message {{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    {% if usage_data %}
+        <!-- Display usage data in a table -->
+        <table border="1" style="margin-top: 20px; width: 80%; margin-left: auto; margin-right: auto;">
+            <thead>
+                <tr>
+                    <th>Data Consumption (MB)</th>
+                    <th>Minutes Used</th>
+                    <th>SMS Sent</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for usage in usage_data %}
+                    <tr>
+                        <td>{{ usage.data_consumption }}</td>
+                        <td>{{ usage.minutes_used }}</td>
+                        <td>{{ usage.SMS_sent }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No active plans found for this mobile number in the current month.</p>
+    {% endif %}
+
+    <a href="/customer" class="btn btn-primary">Back to Customer Dashboard</a>
+
+</body>
+</html>

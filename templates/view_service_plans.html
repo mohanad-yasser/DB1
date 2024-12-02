@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Service Plans</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <h1>Service Plans</h1>
+
+    <!-- Display Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash-message {{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Display Service Plans -->
+    {% if service_plans %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Plan ID</th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>SMS Offered</th>
+                    <th>Minutes Offered</th>
+                    <th>Data Offered</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for plan in service_plans %}
+                    <tr>
+                        <td>{{ plan.planID }}</td>
+                        <td>{{ plan.name }}</td>
+                        <td>{{ plan.price }}</td>
+                        <td>{{ plan.SMS_offered }}</td>
+                        <td>{{ plan.minutes_offered }}</td>
+                        <td>{{ plan.data_offered }}</td>
+                        <td>{{ plan.description }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No service plans available at the moment.</p>
+    {% endif %}
+
+    <!-- Go to Customer Homepage Button -->
+    <a href="/customer" class="btn-primary">Go to Customer Homepage</a>
+
+    
+</body>
+</html>

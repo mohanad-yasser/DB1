@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unsubscribed Plans</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <h1>View Unsubscribed Plans</h1>
+
+    <!-- Form to input Mobile Number -->
+    <form method="POST">
+        <label for="mobile_num">Enter Your Mobile Number:</label>
+        <input type="text" id="mobile_num" name="mobile_num" required>
+        <button type="submit">Get Unsubscribed Plans</button>
+    </form>
+
+    <!-- Display Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul>
+                {% for category, message in messages %}
+                    <li class="flash-message {{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    {% if unsubscribed_plans %}
+        <!-- Display the Unsubscribed Plans in a Table -->
+        <table border="1" style="margin-top: 20px; width: 80%; margin-left: auto; margin-right: auto;">
+            <thead>
+                <tr>
+                    <th>Plan ID</th>
+                    <th>Plan Name</th>
+                    <th>Price</th>
+                    <th>SMS_offered</th>
+                    <th>minutes_offered</th>
+                    <th>data_offered</th>
+                    <th>description</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for plan in unsubscribed_plans %}
+                    <tr>
+                        <td>{{ plan[0] }}</td> 
+                        <td>{{ plan[1] }}</td>
+                        <td>{{ plan[2] }}</td>
+                        <td>{{ plan[3] }}</td>
+                        <td>{{ plan[4] }}</td>
+                        <td>{{ plan[5] }}</td>
+                        <td>{{ plan[6] }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No unsubscribed plans available for this customer.</p>
+    {% endif %}
+
+    <a href="/customer" class="btn btn-primary">Back to Customer Dashboard</a>
+
+</body>
+</html>

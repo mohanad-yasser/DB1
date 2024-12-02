@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Transaction Details</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <h1>All Payment Transaction Details</h1>
+
+    <!-- Table to display payment details with corresponding accounts -->
+    <table border="1" style="margin-top: 20px; width: 80%; margin-left: auto; margin-right: auto;">
+        <tr>
+            <th>Payment ID</th>
+            <th>Amount</th>
+            <th>Date of Payment</th>
+            <th>Payment Method</th>
+            <th>Payment Status</th>
+            <th>Mobile Number</th>
+        </tr>
+        {% if payments %}
+            {% for payment in payments %}
+                <tr>
+                    <td>{{ payment.paymentID }}</td>
+                    <td>{{ payment.amount }}</td>
+                    <td>{{ payment.date_of_payment }}</td>
+                    <td>{{ payment.payment_method }}</td>
+                    <td>{{ payment.status }}</td>
+                    <td>{{ payment.mobileNo }}</td>
+                </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="6">No payment transactions found.</td>
+            </tr>
+        {% endif %}
+    </table>
+
+    <!-- Back to Admin Dashboard Button -->
+    <a href="/admin" class="btn btn-primary">Back to Admin Dashboard</a>
+</body>
+</html>

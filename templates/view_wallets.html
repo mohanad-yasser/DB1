@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Wallets and Customer Details</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+<h1>All Wallets and Customer Details</h1>
+
+<!-- Table to display wallet details with customer names -->
+<table>
+    <thead>
+        <tr>
+            <th>Wallet ID</th>
+            <th>Customer Name</th>
+            <th>Mobile Number</th>
+            <th>Wallet Balance</th>
+            <th>Currency</th>
+            <th>Last Modified Date</th>
+            <th>National ID</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% if wallets %}
+            {% for wallet in wallets %}
+                <tr>
+                    <td>{{ wallet.walletID }}</td>
+                    <td>{{ wallet.first_name }} {{ wallet.last_name }}</td>
+                    <td>{{ wallet.mobileNo }}</td>
+                    <td>{{ wallet.current_balance }}</td>
+                    <td>{{ wallet.currency }}</td>
+                    <td>{{ wallet.last_modified_date }}</td>
+                    <td>{{ wallet.nationalID }}</td>
+                </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="7">No wallets found.</td>
+            </tr>
+        {% endif %}
+    </tbody>
+</table>
+
+<!-- Back to Admin Dashboard Button -->
+<a href="/admin" class="btn-primary">Back to Admin Dashboard</a>
+
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Average Transfer Amount</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script>
+        // JavaScript function to validate date format
+        function validateDates() {
+            const startDate = document.getElementById('start_date').value;
+            const endDate = document.getElementById('end_date').value;
+            const datePattern = /^(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])-\d{4}$/; // MM-DD-YYYY
+
+            // Validate start date
+            if (!datePattern.test(startDate)) {
+                alert("Invalid start date format. Please use MM-DD-YYYY.");
+                return false;
+            }
+
+            // Validate end date
+            if (!datePattern.test(endDate)) {
+                alert("Invalid end date format. Please use MM-DD-YYYY.");
+                return false;
+            }
+
+            return true;
+        }
+    </script>
+</head>
+<body>
+
+    <h1>Average Sent Transaction Amount for Wallet</h1>
+
+    <!-- Form to input wallet ID and date range -->
+    <form method="POST" onsubmit="return validateDates()">
+        <label for="wallet_id">Wallet ID:</label>
+        <input type="text" id="wallet_id" name="wallet_id" required>
+        <br><br>
+        <label for="start_date">Start Date (MM-DD-YYYY):</label>
+        <input type="text" id="start_date" name="start_date" placeholder="MM-DD-YYYY" required>
+        <br><br>
+        <label for="end_date">End Date (MM-DD-YYYY):</label>
+        <input type="text" id="end_date" name="end_date" placeholder="MM-DD-YYYY" required>
+        <br><br>
+        <button type="submit">Fetch Data</button>
+    </form>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul>
+                {% for category, message in messages %}
+                    <li class="flash-message {{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Show the result if available -->
+    {% if avg_transfer_amount is not none %}
+        <h3>Average Sent Transaction Amount:</h3>
+        <p>{{ avg_transfer_amount }}</p>
+    {% else %}
+        <p>No data available for the specified wallet and date range.</p>
+    {% endif %}
+
+    <!-- Back to Admin Dashboard Button -->
+    <a href="/admin" class="btn btn-primary">Back to Admin Dashboard</a>
+
+</body>
+</html>

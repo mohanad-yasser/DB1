@@ -233,6 +233,405 @@ def list_sms_offers():
     # Render the template without offers on the GET request
     return render_template('list_sms_offers.html', sms_offers=None)
 
+# View all wallets along with customer names
+@app.route('/view_wallets')
+def view_wallets():
+    try:
+        # Query to fetch wallet details along with customer names from the CustomerWallet view
+        query = text("SELECT * FROM CustomerWallet")
+        result = db.session.execute(query)
+        wallets = result.fetchall()
+
+        # Render the template with the wallet data
+        return render_template('view_wallets.html', wallets=wallets)
+    except Exception as e:
+        flash(f"Error retrieving wallet details: {str(e)}", "danger")
+        return redirect(url_for('admin'))
+
+@app.route('/view_eshops')
+def view_eshops():
+    try:
+        # Query to fetch E-shop details along with redeemed voucher IDs and values
+        query = text('SELECT * FROM E_shopVouchers')
+        result = db.session.execute(query)
+        eshops = result.fetchall()
+        return render_template('view_eshops.html', eshops=eshops)
+    except Exception as e:
+        flash(f"Error retrieving E-shops or vouchers: {str(e)}", "danger")
+        return redirect(url_for('admin'))
+
+@app.route('/view_all_payments')
+def view_all_payments():
+    try:
+        # Query the AccountPayments view to fetch all payment transactions along with account details
+        payments = db.session.execute(text("SELECT * FROM AccountPayments")).fetchall()
+        return render_template('view_all_payments.html', payments=payments)
+    except Exception as e:
+        flash(f"Error retrieving payment transactions: {str(e)}", "danger")
+        return redirect(url_for('admin'))
+
+@app.route('/view_cashback_transactions')
+def view_cashback_transactions():
+    try:
+        # Query the Num_of_cashback view to fetch the count of cashback transactions per wallet
+        cashback_counts = db.session.execute(text("SELECT * FROM Num_of_cashback")).fetchall()
+        return render_template('view_cashback_transactions.html', cashback_counts=cashback_counts)
+    except Exception as e:
+        flash(f"Error retrieving cashback transaction data: {str(e)}", "danger")
+        return redirect(url_for('admin'))
+    
+@app.route('/view_accepted_payments', methods=['GET', 'POST'])
+def view_accepted_payments():
+    payment_count = None
+    total_points = None
+
+    if request.method == 'POST':
+        mobile_num = request.form['mobile_num']
+
+        try:
+            # Debugging: Print mobile number received from the form
+            print(f"Mobile Number Received: {mobile_num}")
+
+            # Executing the query with parameter binding
+            query = text("""
+                EXEC Account_Payment_Points @mobile_num=:mobile_num
+            """)
+            result = db.session.execute(query, {'mobile_num': mobile_num}).fetchone()
+
+            # Debugging: Check if result is None or not
+            if result:
+                # Extracting the result values
+                payment_count = result[0]  # Number of successful payments
+                total_points = result[1]   # Total points earned
+                
+                # Debugging: Print the result values
+                print(f"Payment Count: {payment_count}, Total Points: {total_points}")
+
+                flash("Data fetched successfully!", "success")
+            else:
+                flash("No successful payments found for this mobile number in the last year.", "danger")
+                
+                # Debugging: Print message when no data is found
+                print("No successful payments found for this mobile number in the last year.")
+            
+        except Exception as e:
+            flash(f"Error fetching data: {str(e)}", "danger")
+            # Ensure no data is passed in case of error
+            payment_count = None
+            total_points = None
+
+            # Debugging: Print the exception if there's an error
+            print(f"Error fetching data: {str(e)}")
+
+        # Debugging: Print the values being passed to the template
+        print(f"Passing to template: payment_count = {payment_count}, total_points = {total_points}")
+
+        # Rendering the template with data passed
+        return render_template('view_accepted_payments.html', 
+                               payment_count=payment_count, 
+                               total_points=total_points)
+
+    # For GET request, just render the empty form and the empty results
+    return render_template('view_accepted_payments.html', payment_count=None, total_points=None)
+
+@app.route('/view_cashback_by_wallet_and_plan', methods=['GET', 'POST'])
+def view_cashback_by_wallet_and_plan():
+    if request.method == 'POST':
+        wallet_id = request.form['wallet_id']
+        plan_id = request.form['plan_id']
+        
+        try:
+            # Execute the Wallet_Cashback_Amount function with parameter binding
+            query = text("""
+                SELECT dbo.Wallet_Cashback_Amount(:wallet_id, :plan_id)
+            """)
+            result = db.session.execute(query, {'wallet_id': wallet_id, 'plan_id': plan_id}).fetchone()
+
+            # Check if result is None or not
+            if result:
+                cashback_amount = result[0]  # Cashback amount returned by the function
+                flash("Data fetched successfully!", "success")
+            else:
+                cashback_amount = None
+                flash("No cashback found for this wallet and plan combination.", "danger")
+            
+        except Exception as e:
+            flash(f"Error fetching data: {str(e)}", "danger")
+            cashback_amount = None
+
+        # Rendering the template with the cashback amount data passed
+        return render_template('view_cashback_by_wallet_and_plan.html', cashback_amount=cashback_amount)
+
+    # For GET request, just render the empty form and the empty results
+    return render_template('view_cashback_by_wallet_and_plan.html', cashback_amount=None)
+
+@app.route('/view_avg_transfer', methods=['GET', 'POST'])
+def view_avg_transfer():
+    if request.method == 'POST':
+        wallet_id = request.form['wallet_id']
+        start_date = request.form['start_date']
+        end_date = request.form['end_date']
+
+        try:
+            # Manually parsing MM-DD-YYYY format to YYYY-MM-DD
+            parsed_start_date = datetime.strptime(start_date, "%m-%d-%Y") if start_date else None
+            parsed_end_date = datetime.strptime(end_date, "%m-%d-%Y") if end_date else None
+
+            # Convert to string format (YYYY-MM-DD)
+            formatted_start_date = parsed_start_date.strftime("%Y-%m-%d") if parsed_start_date else None
+            formatted_end_date = parsed_end_date.strftime("%Y-%m-%d") if parsed_end_date else None
+
+        except ValueError:
+            flash("Invalid date format. Please use MM-DD-YYYY.", "danger")
+            return redirect(url_for('view_avg_transfer'))
+
+        try:
+            # Query to call the Wallet_Transfer_Amount function
+            query = text("""
+                SELECT dbo.Wallet_Transfer_Amount(:wallet_id, :start_date, :end_date) AS avg_transfer_amount
+            """)
+            result = db.session.execute(query, {
+                'wallet_id': wallet_id, 
+                'start_date': formatted_start_date, 
+                'end_date': formatted_end_date
+            }).fetchone()
+
+            # Check if result is None
+            if result:
+                avg_transfer_amount = result[0]
+                flash("Data fetched successfully!", "success")
+            else:
+                avg_transfer_amount = None
+                flash("No transactions found for this wallet within the given date range.", "danger")
+
+        except Exception as e:
+            flash(f"Error fetching data: {str(e)}", "danger")
+            avg_transfer_amount = None
+
+        return render_template('view_avg_transfer.html', avg_transfer_amount=avg_transfer_amount)
+
+    # For GET request, render the empty form
+    return render_template('view_avg_transfer.html', avg_transfer_amount=None)
+
+@app.route('/check_wallet_linkage', methods=['GET', 'POST'])
+def check_wallet_linkage():
+    if request.method == 'POST':
+        mobile_num = request.form['mobile_num']  # Getting the mobile number from the form
+
+        try:
+            # Execute the SQL query using the Wallet_MobileNo function
+            query = text("""
+                SELECT dbo.Wallet_MobileNo(:mobile_num) AS is_linked
+            """)
+            result = db.session.execute(query, {'mobile_num': mobile_num}).fetchone()
+
+            # Check if the result is returned as 1 or 0
+            if result:
+                is_linked = result[0]
+                if is_linked == 1:
+                    flash(f"The mobile number {mobile_num} is linked to a wallet.", "success")
+                else:
+                    flash(f"The mobile number {mobile_num} is not linked to any wallet.", "danger")
+            else:
+                flash("Error checking wallet linkage.", "danger")
+
+        except Exception as e:
+            flash(f"Error: {str(e)}", "danger")
+
+        return render_template('check_wallet_linkage.html', is_linked=is_linked)
+
+    return render_template('check_wallet_linkage.html', is_linked=None)
+
+@app.route('/update_points', methods=['GET', 'POST'])
+def update_points():
+    if request.method == 'POST':
+        mobile_num = request.form['mobile_num']  # Get mobile number from the form
+        
+        try:
+            # Execute the stored procedure to update points for the mobile number
+            query = text("""
+                EXEC dbo.Total_Points_Account :mobile_num
+            """)
+            result = db.session.execute(query, {'mobile_num': mobile_num})
+            
+            # Flash success message
+            flash(f"Points updated successfully for mobile number {mobile_num}.", "success")
+        
+        except Exception as e:
+            flash(f"Error updating points: {str(e)}", "danger")
+    
+        return render_template('update_points.html')
+
+    return render_template('update_points.html')
+
+@app.route('/view_service_plans')
+def view_service_plans():
+    try:
+        # Query to fetch all service plans from the database
+        query = text("SELECT * FROM allServicePlans")
+        result = db.session.execute(query).fetchall()
+
+        # Render the template with the service plans data
+        return render_template('view_service_plans.html', service_plans=result)
+    except Exception as e:
+        # Flash an error message if there is a problem
+        flash(f"Error retrieving service plans: {str(e)}", "danger")
+        
+        # Render the template again with the error message, keeping the user on the same page
+        return render_template('view_service_plans.html', service_plans=None)
+from datetime import datetime
+from flask import render_template, request, flash, redirect, url_for
+from sqlalchemy import text
+
+@app.route('/view_consumption', methods=['GET', 'POST'])
+def view_total_consumption():
+    if request.method == 'POST':
+        plan_name = request.form['plan_name']
+        start_date = request.form['start_date']
+        end_date = request.form['end_date']
+
+        # Convert input dates from MM-DD-YYYY to YYYY-MM-DD format
+        try:
+            parsed_start_date = datetime.strptime(start_date, "%m-%d-%Y")
+            parsed_end_date = datetime.strptime(end_date, "%m-%d-%Y")
+            formatted_start_date = parsed_start_date.strftime("%Y-%m-%d")
+            formatted_end_date = parsed_end_date.strftime("%Y-%m-%d")
+        except ValueError:
+            flash("Invalid date format. Please use MM-DD-YYYY.", "danger")
+            return redirect(url_for('view_consumption'))
+
+        # Query the Consumption function
+        try:
+            query = text("""
+                SELECT * 
+                FROM dbo.Consumption(:plan_name, :start_date, :end_date)
+            """)
+            # Execute the query and fetch the result
+            result = db.session.execute(query, {
+                'plan_name': plan_name,
+                'start_date': formatted_start_date,
+                'end_date': formatted_end_date
+            }).fetchone()
+
+            # Check if the result is not None and contains data
+            if result:
+                total_consumption = {
+                    "data_consumption": result[0],  # Access by index (0 = data_consumption)
+                    "minutes_used": result[1],       # Access by index (1 = minutes_used)
+                    "SMS_sent": result[2]            # Access by index (2 = SMS_sent)
+                }
+            else:
+                total_consumption = None
+                flash("No consumption data found for this plan and date range.", "danger")
+
+            return render_template('view_consumption.html', total_consumption=total_consumption)
+
+        except Exception as e:
+            flash(f"Error retrieving consumption data: {str(e)}", "danger")
+            return redirect(url_for('view_total_consumption'))
+
+    return render_template('view_consumption.html', total_consumption=None)
+
+@app.route('/view_unsubscribed_plans', methods=['GET', 'POST'])
+def view_unsubscribed_plans():
+    unsubscribed_plans = None  # Default to None in case no plans are found
+
+    if request.method == 'POST':
+        mobile_num = request.form['mobile_num']  # Get mobile number from the form
+
+        # Validate mobile number format (assuming it's an 11-digit string)
+        if len(mobile_num) != 11 or not mobile_num.isdigit():
+            flash("Please enter a valid mobile number.", "danger")
+            return redirect(url_for('view_unsubscribed_plans'))
+
+        try:
+            # Query the Unsubscribed_Plans procedure
+            query = text("""
+                EXEC Unsubscribed_Plans @mobile_num=:mobile_num
+            """)
+            result = db.session.execute(query, {'mobile_num': mobile_num}).fetchall()
+
+            if result:
+                unsubscribed_plans = result
+            else:
+                flash("No unsubscribed plans found for this customer.", "warning")
+
+        except Exception as e:
+            flash(f"Error retrieving unsubscribed plans: {str(e)}", "danger")
+
+    return render_template('view_unsubscribed_plans.html', unsubscribed_plans=unsubscribed_plans)
+
+@app.route('/view_account_usage', methods=['GET', 'POST'])
+def view_account_usage():
+    if request.method == 'POST':
+        mobile_num = request.form['mobile_num']  # Get mobile number from the form
+
+        # Validate mobile number format (assuming it's an 11-digit string)
+        if len(mobile_num) != 11 or not mobile_num.isdigit():
+            flash("Please enter a valid mobile number.", "danger")
+            return redirect(url_for('view_account_usage'))
+
+        try:
+            # Query to execute the Usage_Plan_CurrentMonth function
+            query = text("""
+                SELECT * 
+                FROM dbo.Usage_Plan_CurrentMonth(:mobile_num)
+            """)
+            # Execute the query and fetch the result
+            result = db.session.execute(query, {'mobile_num': mobile_num}).fetchall()
+
+            if result:
+                usage_data = [{
+                    "data_consumption": row[0],
+                    "minutes_used": row[1],
+                    "SMS_sent": row[2]
+                } for row in result]
+
+                return render_template('view_account_usage.html', usage_data=usage_data, mobile_num=mobile_num)
+            else:
+                flash("No active plans found for this mobile number in the current month.", "warning")
+                return render_template('view_account_usage.html', usage_data=None)
+
+        except Exception as e:
+            flash(f"Error retrieving usage data: {str(e)}", "danger")
+            return render_template('view_account_usage.html', usage_data=None)
+
+    return render_template('view_account_usage.html', usage_data=None)
+
+@app.route('/view_customer_cashbacks', methods=['GET', 'POST'])
+def view_customer_cashbacks():
+    if request.method == 'POST':
+        national_id = request.form['national_id']  # Get the National ID from the form
+
+        try:
+            # Query to execute the Cashback_Wallet_Customer function
+            query = text("""
+                SELECT * FROM Cashback_Wallet_Customer(:national_id)
+            """)
+            # Execute the query and fetch the results
+            result = db.session.execute(query, {'national_id': national_id}).fetchall()
+
+            # If there are results, process them and pass to the template
+            if result:
+                cashback_transactions = [{
+                    "transaction_id": row[0],
+                    "wallet_id": row[1],
+                    "amount": row[2],
+                    "transaction_date": row[3],
+                    "description": row[4]
+                } for row in result]
+
+                flash("Cashback transactions fetched successfully!", "success")
+                return render_template('view_customer_cashbacks.html', cashback_transactions=cashback_transactions, national_id=national_id)
+            else:
+                flash("No cashback transactions found for this National ID.", "danger")
+                return render_template('view_customer_cashbacks.html', cashback_transactions=None)
+
+        except Exception as e:
+            flash(f"Error fetching cashback transactions: {str(e)}", "danger")
+            return render_template('view_customer_cashbacks.html', cashback_transactions=None)
+
+    return render_template('view_customer_cashbacks.html', cashback_transactions=None)
 
 if __name__ == '__main__':
     app.run(debug=True)

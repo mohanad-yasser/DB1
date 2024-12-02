@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Total Consumption by Plan and Duration</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+    <h1>View Total Consumption by Plan and Date Range</h1>
+
+    <!-- Form to input Plan Name, Start Date, and End Date -->
+    <form method="POST">
+        <label for="plan_name">Enter Plan Name:</label>
+        <input type="text" id="plan_name" name="plan_name" required><br><br>
+
+        <label for="start_date">Enter Start Date (MM-DD-YYYY):</label>
+        <input type="text" id="start_date" name="start_date" required><br><br>
+
+        <label for="end_date">Enter End Date (MM-DD-YYYY):</label>
+        <input type="text" id="end_date" name="end_date" required><br><br>
+
+        <button type="submit">Fetch Total Consumption</button>
+    </form>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul>
+                {% for category, message in messages %}
+                    <li class="flash-message {{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    {% if total_consumption %}
+        <table border="1" style="margin-top: 20px; width: 50%; margin-left: auto; margin-right: auto;">
+            <tr>
+                <th>Data Consumption (MB)</th>
+                <th>Minutes Used</th>
+                <th>SMS Sent</th>
+            </tr>
+            <tr>
+                <td>{{ total_consumption.data_consumption }}</td>
+                <td>{{ total_consumption.minutes_used }}</td>
+                <td>{{ total_consumption.SMS_sent }}</td>
+            </tr>
+        </table>
+    {% else %}
+        <p>No data available for this plan and date range combination.</p>
+    {% endif %}
+
+    <a href="/customer" class="btn btn-primary">Back to Admin Dashboard</a>
+
+</body>
+</html>
