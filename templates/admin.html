@@ -48,6 +48,23 @@
             transition: 0.3s;
         }
 
+        /* Logout Button Styling */
+        .btn-logout {
+            width: auto;
+            padding: 10px 20px;
+            font-size: 1rem;
+            margin: 10px 0;
+            text-align: center;
+            background-color: #dc3545;
+            color: white;
+        }
+        .btn-logout:hover {
+            background-color: #c82333;
+            color: white;
+            transform: scale(1.05);
+            transition: 0.3s;
+        }
+
         /* Grouping and Layout */
         .container {
             margin-top: 30px;
@@ -70,6 +87,13 @@
 <body>
 
     <div class="container">
+        <!-- Logout Button -->
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <button onclick="location.href='/'" class="btn btn-logout">Logout</button>
+            </div>
+        </div>
+
         <h1>Admin Dashboard</h1>
         <p>Manage your admin tasks here.</p>
 

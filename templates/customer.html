@@ -48,6 +48,23 @@
             transition: 0.3s;
         }
 
+        /* Logout Button Styling */
+        .btn-logout {
+            width: auto;
+            padding: 10px 20px;
+            font-size: 1rem;
+            margin: 10px 0;
+            text-align: center;
+            background-color: #dc3545;
+            color: white;
+        }
+        .btn-logout:hover {
+            background-color: #c82333;
+            color: white;
+            transform: scale(1.05);
+            transition: 0.3s;
+        }
+
         /* Grouping and Layout */
         .container {
             margin-top: 30px;
@@ -70,6 +87,13 @@
 <body>
 
     <div class="container">
+        <!-- Logout Button -->
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <button onclick="location.href='/'" class="btn btn-logout">Logout</button>
+            </div>
+        </div>
+
         <h1>Customer Dashboard</h1>
         <p>Manage your account information and view usage here.</p>
 
@@ -124,6 +148,138 @@
                     <div class="card-body">
                         <h5 class="card-title">Cashback Transactions</h5>
                         <button onclick="location.href='/view_customer_cashbacks'" class="btn btn-primary btn-custom">View Cashback Transactions</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Active Benefits -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Active Benefits</h5>
+                        <button onclick="location.href='/view_active_benefits'" class="btn btn-primary btn-custom">View Active Benefits</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row for Ticket and Voucher -->
+        <div class="row">
+            <!-- Unresolved Tickets -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Unresolved Tickets</h5>
+                        <button onclick="location.href='/view_unresolved_tickets'" class="btn btn-primary btn-custom">View Unresolved Tickets</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Highest Voucher -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Highest Voucher</h5>
+                        <button onclick="location.href='/view_highest_voucher'" class="btn btn-primary btn-custom">View Highest Voucher</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Remaining Plan Amount -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Remaining Plan Amount</h5>
+                        <button onclick="location.href='/remaining_plan_amount'" class="btn btn-primary btn-custom">View Remaining Plan Amount</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row for Payments -->
+        <div class="row">
+            <!-- Extra Plan Amount -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Extra Plan Amount</h5>
+                        <button onclick="location.href='/get_extra_amount'" class="btn btn-primary btn-custom">Get Extra Plan Amount</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top Successful Payments -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Top Successful Payments</h5>
+                        <button onclick="location.href='/top_successful_payments'" class="btn btn-primary btn-custom">View Top Payments</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recharge Balance -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Recharge Balance</h5>
+                        <button onclick="location.href='/recharge_balance'" class="btn btn-primary btn-custom">Recharge Balance</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row for Shops and Subscription -->
+        <div class="row">
+            <!-- View Shops -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Shops</h5>
+                        <button onclick="location.href='/view_shops'" class="btn btn-primary btn-custom">View Shops</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Subscribed Plans -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Subscribed Plans</h5>
+                        <button onclick="location.href='/view_subscribed_plans'" class="btn btn-primary btn-custom">View Subscribed Plans</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Renew Subscription -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Renew Subscription</h5>
+                        <button onclick="location.href='/renew_subscription'" class="btn btn-primary btn-custom">Renew Subscription</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row for Payment and Cashback -->
+        <div class="row">
+            <!-- Payment Wallet Cashback -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Payment Wallet Cashback</h5>
+                        <button onclick="location.href='/payment_wallet_cashback'" class="btn btn-primary btn-custom">Check Cashback</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Redeem Voucher -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Redeem Voucher</h5>
+                        <button onclick="location.href='/redeem_voucher'" class="btn btn-primary btn-custom">Redeem Voucher</button>
                     </div>
                 </div>
             </div>
