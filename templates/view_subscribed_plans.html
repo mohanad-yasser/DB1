@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscribed Plans in the Past 5 Months</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+    <h1>View Subscribed Plans in the Past 5 Months</h1>
+
+    <!-- Form to input Mobile Number -->
+    <form method="POST" action="{{ url_for('view_subscribed_plans') }}">
+        <label for="mobile_num">Enter Mobile Number:</label>
+        <input type="text" id="mobile_num" name="mobile_num" required><br><br>
+
+        <button type="submit">View Subscribed Plans</button>
+    </form>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul>
+                {% for category, message in messages %}
+                    <li class="flash-message {{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    {% if plans %}
+        <h3>Plans Subscribed to in the Past 5 Months</h3>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Plan ID</th>
+                    <th>Plan Name</th>
+                    <th>Price</th>
+                    <th>SMS Offered</th>
+                    <th>Minutes Offered</th>
+                    <th>Data Offered</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for plan in plans %}
+                    <tr>
+                        <td>{{ plan.planID }}</td>
+                        <td>{{ plan.name }}</td>
+                        <td>{{ plan.price }}</td>
+                        <td>{{ plan.SMS_offered }}</td>
+                        <td>{{ plan.minutes_offered }}</td>
+                        <td>{{ plan.data_offered }}</td>
+                        <td>{{ plan.description }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No plans found in the past 5 months for this account.</p>
+    {% endif %}
+
+    <a href="/customer" class="btn btn-primary">Back to Customer Dashboard</a>
+
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Remaining Plan Amount</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+    <h1>Check Remaining Plan Amount</h1>
+
+    <!-- Form to input Mobile Number and Plan Name -->
+    <form method="POST" action="{{ url_for('remaining_plan_amount') }}">
+        <label for="mobile_num">Enter Mobile Number:</label>
+        <input type="text" id="mobile_num" name="mobile_num" required><br><br>
+
+        <label for="plan_name">Enter Plan Name:</label>
+        <input type="text" id="plan_name" name="plan_name" required><br><br>
+
+        <button type="submit">Check Remaining Amount</button>
+    </form>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul>
+                {% for category, message in messages %}
+                    <li class="flash-message {{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    {% if remaining_amount is not none %}
+        <h3>Remaining Amount: {{ remaining_amount }}</h3>
+    {% endif %}
+
+    <a href="/customer" class="btn btn-primary">Back to Customer Dashboard</a>
+
+</body>
+</html>

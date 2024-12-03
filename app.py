@@ -633,5 +633,403 @@ def view_customer_cashbacks():
 
     return render_template('view_customer_cashbacks.html', cashback_transactions=None)
 
+@app.route('/view_active_benefits', methods=['GET', 'POST'])
+def view_active_benefits():
+    try:
+        # Query the 'allBenefits' view to fetch active benefits
+        query = text("SELECT * FROM allBenefits")
+        result = db.session.execute(query).fetchall()
+
+        # Check if there are any results and pass to template
+        if result:
+            benefits = [{
+                "benefitID": row[0],  # benefitID
+                "description": row[1],  # description
+                "validity_date": row[2],  # validity_date
+                "status": row[3],  # status
+                "mobileNo": row[4]  # mobileNo
+            } for row in result]
+
+            return render_template('view_active_benefits.html', benefits=benefits)
+        else:
+            flash("No active benefits found.", "warning")
+            return render_template('view_active_benefits.html', benefits=None)
+    
+    except Exception as e:
+        flash(f"Error retrieving active benefits: {str(e)}", "danger")
+        return render_template('view_active_benefits.html', benefits=None)
+    
+@app.route('/view_unresolved_tickets', methods=['GET', 'POST'])
+def view_unresolved_tickets():
+    unresolved_tickets = None  # Default to None in case no tickets are found
+
+    if request.method == 'POST':
+        # Get National ID from the form
+        national_id = request.form['national_id']
+
+        # Validate National ID (assuming it's an integer)
+        try:
+            national_id = int(national_id)
+        except ValueError:
+            flash("Please enter a valid National ID.", "danger")
+            return redirect(url_for('view_unresolved_tickets'))
+
+        try:
+            # Query the Ticket_Account_Customer stored procedure to get unresolved tickets
+            query = text("""
+                EXEC Ticket_Account_Customer @NID=:national_id
+            """)
+            result = db.session.execute(query, {'national_id': national_id}).fetchone()
+
+            # Check if result is not None
+            if result:
+                unresolved_tickets = result[0]  # Extract count of unresolved tickets
+            else:
+                flash("No unresolved tickets found for this National ID.", "warning")
+
+        except Exception as e:
+            flash(f"Error retrieving unresolved tickets: {str(e)}", "danger")
+
+    return render_template('view_unresolved_tickets.html', unresolved_tickets=unresolved_tickets)
+
+# Define the route to view highest voucher for a customer
+@app.route('/view_highest_voucher', methods=['GET', 'POST'])
+def view_highest_voucher():
+    voucher_info = None
+
+    if request.method == 'POST':
+        mobile_num = request.form['mobile_num']
+
+        # Validate the mobile number format
+        if len(mobile_num) != 11 or not mobile_num.isdigit():
+            flash("Please enter a valid 11-digit mobile number.", "danger")
+            return redirect(url_for('view_highest_voucher'))
+
+        try:
+            # Execute stored procedure to get the highest value voucher
+            query = text("""
+                EXEC Account_Highest_Voucher :mobile_num
+            """)
+            result = db.session.execute(query, {'mobile_num': mobile_num}).fetchall()
+
+            # If the procedure returns a voucher ID, display it
+            if result:
+                voucher_info = result[0]  # Extract the voucherID
+                flash(f"Voucher ID with the highest value: {voucher_info[0]}", "success")
+            else:
+                flash("No vouchers found for this account.", "warning")
+
+        except Exception as e:
+            flash(f"Error retrieving voucher: {str(e)}", "danger")
+            return redirect(url_for('view_highest_voucher'))
+
+    return render_template('view_highest_voucher.html', voucher_info=voucher_info)
+
+@app.route('/remaining_plan_amount', methods=['GET', 'POST'])
+def remaining_plan_amount():
+    remaining_amount = None
+
+    if request.method == 'POST':
+        mobile_num = request.form['mobile_num']
+        plan_name = request.form['plan_name']
+
+        # Validate the mobile number format
+        if len(mobile_num) != 11 or not mobile_num.isdigit():
+            flash("Please enter a valid 11-digit mobile number.", "danger")
+            return redirect(url_for('remaining_plan_amount'))
+
+        try:
+            # Execute the stored function to get the remaining amount for the plan
+            query = text("""
+                SELECT dbo.Remaining_plan_amount(:mobile_num, :plan_name) AS remaining_amount
+            """)
+            result = db.session.execute(query, {'mobile_num': mobile_num, 'plan_name': plan_name}).fetchone()
+
+            if result:
+                remaining_amount = result[0]
+                if remaining_amount is not None:
+                    flash(f"Remaining Amount for plan '{plan_name}': {remaining_amount}", "success")
+                else:
+                    flash(f"No remaining amount found for the given plan and account.", "warning")
+            else:
+                flash("No data found for the given mobile number or plan.", "warning")
+
+        except Exception as e:
+            flash(f"Error retrieving data: {str(e)}", "danger")
+
+    return render_template('remaining_plan_amount.html', remaining_amount=remaining_amount)
+
+@app.route('/get_extra_amount', methods=['GET', 'POST'])
+def get_extra_amount():
+    extra_amount = None
+
+    if request.method == 'POST':
+        mobile_no = request.form.get('mobile_no')
+        plan_name = request.form.get('plan_name')
+
+        # Query to fetch the extra amount using the previously created SQL function
+        try:
+            # Use dict() to fetch the result as a dictionary
+            query = text("""
+                SELECT dbo.Extra_plan_amount(:mobile_no, :plan_name) AS extra_amount
+            """)
+
+            # Fetch the result and return as a dictionary
+            result = db.session.execute(query, {'mobile_no': mobile_no, 'plan_name': plan_name}).fetchone()
+
+            # result should be a tuple (if using fetchone), so we need to access it by index, not string keys
+            if result:
+                # Since we're using fetchone(), it's a tuple, so access it by index
+                extra_amount = result[0]  # result[0] contains the extra_amount value
+            else:
+                flash('No data found or error occurred.', 'danger')
+
+        except Exception as e:
+            flash(f"Error retrieving extra amount: {str(e)}", 'danger')
+
+    return render_template('get_extra_amount.html', extra_amount=extra_amount)
+
+@app.route('/top_successful_payments', methods=['GET', 'POST'])
+def top_successful_payments():
+    top_payments = []
+
+    if request.method == 'POST':
+        mobile_no = request.form.get('mobile_no')
+
+        try:
+            # Call the stored procedure to get the top 10 successful payments
+            query = text("""
+                EXEC Top_Successful_Payments :mobile_no
+            """)
+
+            # Execute the query and fetch the results
+            result = db.session.execute(query, {'mobile_no': mobile_no}).fetchall()
+
+            # If results exist, prepare them for display
+            if result:
+                for row in result:
+                    top_payments.append({
+                        "paymentID": row.paymentID,
+                        "amount": row.amount,
+                        "date_of_payment": row.date_of_payment,
+                        "payment_method": row.payment_method,
+                        "status": row.status
+                    })
+            else:
+                flash("No successful payments found for this mobile number.", "danger")
+
+        except Exception as e:
+            flash(f"Error retrieving top payments: {str(e)}", "danger")
+
+    return render_template('top_successful_payments.html', top_payments=top_payments)
+
+@app.route('/view_shops')
+def view_shops():
+    try:
+        # Query the 'allShops' view to get all shop details
+        query = text('SELECT * FROM allShops')
+        result = db.session.execute(query).fetchall()
+
+        # Check if there are any shops, and if so, prepare the list
+        shops = []
+        for row in result:
+            shops.append({
+                "shopID": row.shopID,
+                "name": row.name,
+                "category": row.Category
+            })
+        
+        # Render the template and pass the shop details
+        return render_template('view_shops.html', shops=shops)
+    
+    except Exception as e:
+        # Flash an error message if something goes wrong
+        flash(f"Error retrieving shops: {str(e)}", "danger")
+        return render_template('view_shops.html', shops=None)
+
+# Define the route to view all subscribed plans in the past 5 months
+@app.route('/view_subscribed_plans', methods=['POST', 'GET'])
+def view_subscribed_plans():
+    if request.method == 'POST':
+        mobile_num = request.form.get('mobile_num')  # Get mobile number from the form
+        
+        try:
+            # Call the function to retrieve subscribed plans
+            query = text("""
+                SELECT planID, name, price, SMS_offered, minutes_offered, data_offered, description
+                FROM dbo.Subscribed_plans_5_Months(:mobile_num)
+            """)
+            # Execute the query with the provided mobile number
+            result = db.session.execute(query, {'mobile_num': mobile_num}).fetchall()
+            
+            # Check if we got results
+            if result:
+                # If plans are found, pass them to the template
+                plans = [{'planID': row[0], 'name': row[1], 'price': row[2], 
+                          'SMS_offered': row[3], 'minutes_offered': row[4], 
+                          'data_offered': row[5], 'description': row[6]} for row in result]
+                return render_template('view_subscribed_plans.html', plans=plans)
+            else:
+                flash("No plans found in the past 5 months for this account.", "danger")
+                return redirect(url_for('view_subscribed_plans'))
+        
+        except Exception as e:
+            flash(f"Error retrieving subscribed plans: {str(e)}", "danger")
+            return redirect(url_for('view_subscribed_plans'))
+
+    return render_template('view_subscribed_plans.html', plans=None)
+
+@app.route('/renew_subscription', methods=['POST', 'GET'])
+def renew_subscription():
+    if request.method == 'POST':
+        mobile_num = request.form['mobile_num']  # Mobile number input
+        plan_id = request.form['plan_id']        # Plan ID input
+        amount = request.form['amount']          # Payment amount
+        payment_method = request.form['payment_method']  # Payment method (cash/credit)
+
+        try:
+            # Ensure the data is valid
+            if not mobile_num or not plan_id or not amount or not payment_method:
+                flash("All fields are required.", "danger")
+                return render_template('renew_subscription.html')
+            
+            # Execute the stored procedure to process the renewal
+            query = text("""
+                EXEC Initiate_plan_payment :mobile_num, :amount, :payment_method, :plan_id
+            """)
+            
+            # Execute query with the provided parameters
+            db.session.execute(query, {
+                'mobile_num': mobile_num,
+                'amount': float(amount),  # Ensure it's treated as a float
+                'payment_method': payment_method,
+                'plan_id': int(plan_id)   # Ensure it's treated as an integer
+            })
+            
+            # Commit the transaction if everything goes well
+            db.session.commit()
+
+            flash("Subscription renewed successfully!", "success")
+        except Exception as e:
+            # Rollback the transaction if an error occurs
+            db.session.rollback()
+            flash(f"Error occurred while processing payment: {str(e)}", "danger")
+        
+    # In both cases (success or failure), return the same page with any flash messages
+    return render_template('renew_subscription.html')
+
+@app.route('/payment_wallet_cashback', methods=['POST', 'GET'])
+def payment_wallet_cashback():
+    cashback_amount = None
+
+    if request.method == 'POST':
+        mobile_no = request.form.get('mobile_num')
+        payment_id = request.form.get('payment_id')
+        benefit_id = request.form.get('benefit_id')
+
+        try:
+            # Execute the stored procedure to calculate cashback
+            query = text("""
+                EXEC Payment_wallet_cashback :mobile_num, :payment_id, :benefit_id
+            """)
+
+            # Execute the query with the provided parameters
+            db.session.execute(query, {
+                'mobile_num': mobile_no,
+                'payment_id': payment_id,
+                'benefit_id': benefit_id
+            })
+
+            # Commit the transaction
+            db.session.commit()
+
+            # Calculate cashback (fixed logic, can also be done inside the stored procedure if needed)
+            # Query the database for the amount (this can be modified based on how you store it)
+            query = text("""
+                SELECT 0.1 * p.amount
+                FROM Payment p
+                WHERE p.paymentID = :payment_id AND p.status = 'successful'
+            """)
+            result = db.session.execute(query, {'payment_id': payment_id}).fetchone()
+
+            if result:
+                cashback_amount = result[0]  # Extract the cashback value from the query result
+            else:
+                flash("No valid payment found.", "danger")
+
+        except Exception as e:
+            flash(f"Error occurred while processing cashback: {str(e)}", "danger")
+    
+    # Render the template with the calculated cashback amount
+    return render_template('payment_wallet_cashback.html', cashback_amount=cashback_amount)
+
+@app.route('/recharge_balance', methods=['POST', 'GET'])
+def recharge_balance():
+    if request.method == 'POST':
+        mobile_num = request.form['mobile_num']  # Mobile number input
+        amount = request.form['amount']          # Payment amount
+        payment_method = request.form['payment_method']  # Payment method (cash/credit)
+
+        try:
+            # Validate input fields
+            if not mobile_num or not amount or not payment_method:
+                flash("All fields are required.", "danger")
+                return render_template('recharge_balance.html')
+
+            # Execute the stored procedure to recharge the balance
+            query = text("""
+                EXEC Initiate_balance_payment :mobile_num, :amount, :payment_method
+            """)
+            
+            # Execute the query with the provided parameters
+            db.session.execute(query, {
+                'mobile_num': mobile_num,
+                'amount': float(amount),  # Ensure it's treated as a float
+                'payment_method': payment_method
+            })
+            
+            # Commit the transaction
+            db.session.commit()
+
+            flash("Balance recharged successfully!", "success")
+        except Exception as e:
+            db.session.rollback()  # Rollback transaction on error
+            flash(f"Error occurred while recharging balance: {str(e)}", "danger")
+        
+    return render_template('recharge_balance.html')
+
+@app.route('/redeem_voucher', methods=['POST', 'GET'])
+def redeem_voucher():
+    if request.method == 'POST':
+        mobile_num = request.form['mobile_num']  # Mobile number input
+        voucher_id = request.form['voucher_id']  # Voucher ID input
+
+        try:
+            # Validate input fields
+            if not mobile_num or not voucher_id:
+                flash("Both fields are required.", "danger")
+                return render_template('redeem_voucher.html')
+
+            # Execute the stored procedure to redeem the voucher
+            query = text("""
+                EXEC Redeem_voucher_points :mobile_num, :voucher_id
+            """)
+
+            # Execute the query with the provided parameters
+            db.session.execute(query, {
+                'mobile_num': mobile_num,
+                'voucher_id': int(voucher_id)  # Ensure it's treated as an integer
+            })
+            
+            # Commit the transaction
+            db.session.commit()
+
+            flash("Voucher redeemed successfully!", "success")
+        except Exception as e:
+            db.session.rollback()  # Rollback transaction on error
+            flash(f"Error occurred while redeeming voucher: {str(e)}", "danger")
+        
+    return render_template('redeem_voucher.html')
+
 if __name__ == '__main__':
     app.run(debug=True)

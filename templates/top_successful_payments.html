@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top 10 Successful Payments</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+    <h1>Top 10 Successful Payments</h1>
+
+    <!-- Form to input Mobile Number -->
+    <form method="POST" action="{{ url_for('top_successful_payments') }}">
+        <label for="mobile_no">Enter Mobile Number:</label>
+        <input type="text" id="mobile_no" name="mobile_no" required><br><br>
+        <button type="submit">Get Top 10 Payments</button>
+    </form>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul>
+                {% for category, message in messages %}
+                    <li class="flash-message {{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    {% if top_payments %}
+        <h3>Top 10 Payments for Mobile No: {{ request.form['mobile_no'] }}</h3>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Payment ID</th>
+                    <th>Amount</th>
+                    <th>Date of Payment</th>
+                    <th>Payment Method</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for payment in top_payments %}
+                    <tr>
+                        <td>{{ payment.paymentID }}</td>
+                        <td>{{ payment.amount }}</td>
+                        <td>{{ payment.date_of_payment }}</td>
+                        <td>{{ payment.payment_method }}</td>
+                        <td>{{ payment.status }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+    <a href="/customer" class="btn btn-primary">Back to Customer Dashboard</a>
+
+</body>
+</html>

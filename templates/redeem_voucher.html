@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redeem Voucher</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+    <h1>Redeem Voucher</h1>
+
+    <!-- Form to input Mobile Number and Voucher ID -->
+    <form method="POST" action="{{ url_for('redeem_voucher') }}">
+        <label for="mobile_num">Enter Mobile Number:</label>
+        <input type="text" id="mobile_num" name="mobile_num" required><br><br>
+
+        <label for="voucher_id">Enter Voucher ID:</label>
+        <input type="number" id="voucher_id" name="voucher_id" required><br><br>
+
+        <button type="submit">Redeem Voucher</button>
+    </form>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul>
+                {% for category, message in messages %}
+                    <li class="flash-message {{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    <a href="/customer" class="btn btn-primary">Back to Customer Dashboard</a>
+
+</body>
+</html>
