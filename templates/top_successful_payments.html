@@ -37,6 +37,7 @@
                     <th>Date of Payment</th>
                     <th>Payment Method</th>
                     <th>Status</th>
+                    <th>Mobile Number</th>
                 </tr>
             </thead>
             <tbody>
@@ -47,6 +48,7 @@
                         <td>{{ payment.date_of_payment }}</td>
                         <td>{{ payment.payment_method }}</td>
                         <td>{{ payment.status }}</td>
+                        <td>{{ payment.mobile_no }}</td>
                     </tr>
                 {% endfor %}
             </tbody>

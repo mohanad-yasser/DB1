@@ -3,48 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Account Usage Report</title>
+    <title>Account Usage on Subscribed Plans</title>
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
-    <h1>Account Usage Report</h1>
-    
+    <h1>Account Usage on Subscribed Plans</h1>
+
     <!-- Form to input mobile number and start date -->
-    <form method="POST" action="{{ url_for('show_account_usage') }}">
-        <label for="mobile_number">Mobile Number:</label>
-        <input type="text" name="mobile_number" id="mobile_number" value="{{ mobile_number if mobile_number else '' }}" required>
-        
-        <!-- The date input should be handled as a text to allow flexible format handling -->
+    <form id="usageForm" method="POST">
+        <label for="mobileNo">Mobile Number:</label>
+        <input type="text" id="mobileNo" name="mobileNo" required><br><br>
+
         <label for="start_date">Start Date (DD-MM-YYYY):</label>
-        <input type="text" name="start_date" id="start_date" placeholder="DD-MM-YYYY" value="{{ start_date if start_date else '' }}" required pattern="\d{2}-\d{2}-\d{4}">
-        
-        <button type="submit">Get Usage Report</button>
+        <input type="text" id="start_date" name="start_date" placeholder="DD-MM-YYYY" required><br><br>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 
-    <!-- Table to display the usage data -->
+    <!-- Displaying results -->
+    {% if usage_data %}
+    <h2>Usage Data for Mobile Number: {{ mobile_num }} from {{ start_date }}</h2>
     <table border="1">
-        <tr>
-            <th>Plan ID</th>
-            <th>Total Data (MB)</th>
-            <th>Total Minutes</th>
-            <th>Total SMS</th>
-        </tr>
-        {% if usage_data %}
-            {% for usage in usage_data %}
+        <thead>
             <tr>
-                <td>{{ usage.planID }}</td>
-                <td>{{ usage.total_data }}</td>
-                <td>{{ usage.total_mins }}</td>
-                <td>{{ usage.total_sms }}</td>
+                <th>Plan ID</th>
+                <th>Total Data (MB)</th>
+                <th>Total Minutes</th>
+                <th>Total SMS</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for data in usage_data %}
+            <tr>
+                <td>{{ data.planID }}</td>
+                <td>{{ data.total_data }}</td>
+                <td>{{ data.total_mins }}</td>
+                <td>{{ data.total_sms }}</td>
             </tr>
             {% endfor %}
-        {% else %}
-            <tr>
-                <td colspan="4">No usage data available for the provided inputs.</td>
-            </tr>
-        {% endif %}
+        </tbody>
     </table>
+    {% else %}
+        <p>No usage data available for the given input.</p>
+    {% endif %}
 
-    <a href="/admin" class="btn btn-primary">Back to Admin Dashboard</a>
+<a href="/admin" class="btn btn-primary">Back to Admin Dashboard</a>
 </body>
 </html>

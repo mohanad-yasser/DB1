@@ -14,19 +14,21 @@
             <th>Mobile Number</th>
             <th>Issue Description</th>
             <th>Priority Level</th>
+            <th>Status</th> <!-- Added Status column -->
         </tr>
         {% if tickets %}
             {% for ticket in tickets %}
             <tr>
-                <td>{{ ticket.ticketID}}</td> <!-- Ensure this matches the returned column name -->
-                <td>{{ ticket.mobileNo }}</td> <!-- Ensure this matches the returned column name -->
-                <td>{{ ticket.issue_description }}</td> <!-- Ensure this matches the returned column name -->
-                <td>{{ ticket.priority_level }}</td> <!-- Ensure this matches the returned column name -->
+                <td>{{ ticket.ticketID }}</td> <!-- Ticket ID -->
+                <td>{{ ticket.mobileNo }}</td> <!-- Mobile Number -->
+                <td>{{ ticket.issue_description }}</td> <!-- Issue Description -->
+                <td>{{ ticket.priority_level }}</td> <!-- Priority Level -->
+                <td>{{ ticket.status }}</td> <!-- Status -->
             </tr>
             {% endfor %}
         {% else %} 
             <tr>
-                <td colspan="4">No resolved tickets available.</td>
+                <td colspan="5">No resolved tickets available.</td> <!-- Adjusted colspan to 5 -->
             </tr>
         {% endif %}
     </table>

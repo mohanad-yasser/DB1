@@ -102,32 +102,53 @@ def view_resolved_tickets():
         flash(f"Error retrieving resolved tickets: {str(e)}", "danger")
         return render_template('view_resolved_tickets.html', tickets=None)
     
+from sqlalchemy import text
+
 # View Customer Accounts and Subscribed Plans Route
 @app.route('/view_customer_accounts')
 def view_customer_accounts():
     try:
         # Executing the stored procedure to get account and plan details
-        result = db.session.execute(text("EXEC Account_Plan;"))
-        
-        # Formatting the result to pass to the template
+        result = db.session.execute(text("""
+            EXEC Account_Plan;
+        """))
+
+        # Extracting the column names (to confirm order)
+        columns = result.keys()
         accounts = []
-        for row in result:
-            accounts.append({
-                "mobileNo": row.mobileNo,
-                "account_type": row.account_type,
-                "status": row.status,
-                "start_date": row.start_date,
-                "balance": row.balance,
-                "points": row.points,
-                "plan_name": row.name,
-                "plan_price": row.price,
-                "subscription_status": row.status
-            })
-        
+
+        # Fetch the result and process it
+        rows = result.fetchall()  # Fetch the rows only once
+        print("Database result:", rows)  # <-- Debug print to check raw data
+
+        for row in rows:
+            # Creating a dictionary to match the columns from the result
+            account = {
+                "mobileNo": row[0],           # customer_account.mobileNo
+                "pass": row[1],               # customer_account.pass
+                "balance": row[2],            # customer_account.balance
+                "account_type": row[3],       # customer_account.account_type
+                "start_date": row[4],         # customer_account.start_date
+                "status": row[5],             # customer_account.status
+                "points": row[6],             # customer_account.points
+                "nationalID": row[7],         # customer_account.nationalID
+                "planID": row[8],             # Service_plan.planID
+                "name": row[9],               # Service_plan.name
+                "price": row[10],             # Service_plan.price
+                "SMS_offered": row[11],       # Service_plan.SMS_offered
+                "minutes_offered": row[12],   # Service_plan.minutes_offered
+                "data_offered": row[13],      # Service_plan.data_offered
+                "description": row[14]        # Service_plan.description
+            }
+            accounts.append(account)
+
+        print("Accounts being passed to template:", accounts)  # <-- Debug print
+
         return render_template('view_customer_accounts.html', accounts=accounts)
     except Exception as e:
         return f"Error retrieving customer accounts: {str(e)}"
 
+    
 from sqlalchemy import text
 
 @app.route('/list_accounts_by_plan', methods=['GET', 'POST'])
@@ -155,34 +176,39 @@ def list_accounts_by_plan():
 
     return render_template('list_accounts_by_plan.html', accounts=None)
 
-# Show Total Usage of Input Account on Each Subscribed Plan from Input Date
 @app.route('/show_account_usage', methods=['GET', 'POST'])
-def show_account_usage():
+def account_usage():
     if request.method == 'POST':
-        mobile_num = request.form.get('mobile_num')
-        start_date = request.form.get('start_date')
-
-        # Convert input date from DD-MM-YYYY to YYYY-MM-DD (SQL standard format)
+        mobile_no = request.form['mobileNo']
+        start_date = request.form['start_date']
+        
+        # Parse the date in DD-MM-YYYY format to YYYY-MM-DD for SQL
         try:
-            parsed_date = datetime.strptime(start_date, "%d-%m-%Y")
-            formatted_date = parsed_date.strftime("%Y-%m-%d")
+            formatted_date = datetime.strptime(start_date, '%d-%m-%Y').date()
         except ValueError:
-            flash("Invalid date format. Please use the calendar to select the date.", "danger")
-            return redirect(url_for('show_account_usage'))
+            return "Invalid date format. Please use DD-MM-YYYY.", 400
+        
+        # Execute the function in the database with the provided date
+        result = db.session.execute(
+            text("SELECT * FROM Account_Usage_Plan(:mobile_no, :start_date)"),
+            {'mobile_no': mobile_no, 'start_date': formatted_date}
+        ).fetchall()
+        
+        # Convert result into a list of dictionaries
+        usage_data = [
+            {
+                'planID': row[0],
+                'total_data': row[1],
+                'total_mins': row[2],
+                'total_sms': row[3]
+            }
+            for row in result
+        ]
 
-        try:
-            query = text("""
-                SELECT planID, [total data], [total mins], [total SMS] 
-                FROM dbo.Account_Usage_Plan(:mobile_num, :start_date)
-            """)
-            results = db.session.execute(query, {'mobile_num': mobile_num, 'start_date': formatted_date}).fetchall()
+        # Return the template with the data
+        return render_template('show_account_usage.html', usage_data=usage_data, mobile_num=mobile_no, start_date=start_date)
 
-            return render_template('show_account_usage.html', usage=results, mobile_num=mobile_num, start_date=start_date)
-        except Exception as e:
-            flash(f"Error retrieving usage data: {str(e)}", "danger")
-            return redirect(url_for('show_account_usage'))
-
-    return render_template('show_account_usage.html', usage=None)
+    return render_template('show_account_usage.html')
 
 # Remove Benefits from Input Account for a Certain Plan ID
 @app.route('/remove_benefits', methods=['GET', 'POST'])
@@ -813,7 +839,8 @@ def top_successful_payments():
                         "amount": row.amount,
                         "date_of_payment": row.date_of_payment,
                         "payment_method": row.payment_method,
-                        "status": row.status
+                        "status": row.status,
+                        "mobile_no":row.mobileNo
                     })
             else:
                 flash("No successful payments found for this mobile number.", "danger")

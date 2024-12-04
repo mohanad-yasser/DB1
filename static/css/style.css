@@ -10,31 +10,40 @@ h1 {
     color: #007bff;
 }
 
+/* Table Styles */
 table {
-    width: 80%;
+    width: 90%; /* Increased width for better visibility */
     margin-left: auto;
     margin-right: auto;
     margin-top: 20px;
     border-collapse: collapse;
+    table-layout: auto; /* Let columns adjust according to content */
 }
 
+/* Table Header and Data Cells */
 th, td {
-    padding: 8px;
-    text-align: left;
+    padding: 12px;
     border: 1px solid #ddd;
+    text-align: left;
+    word-wrap: break-word; /* Ensure content doesn't overflow */
+    white-space: normal;  /* Allow text to break across multiple lines if needed */
 }
 
 th {
+    background-color: #007bff;
+    color: white;
+}
+
+td {
+    background-color: #f9f9f9;
+}
+
+tr:nth-child(even) td {
     background-color: #f2f2f2;
 }
 
-a {
-    text-decoration: none;
-    color: #007bff;
-}
-
-a:hover {
-    text-decoration: underline;
+tr:hover {
+    background-color: #f1f1f1;
 }
 
 /* Button Styles */
@@ -64,32 +73,20 @@ a:hover {
     background-color: #5a6268;
 }
 
-/* Table Customization */
-table {
-    width: 80%;
-    margin: 20px auto;
-    border-collapse: collapse;
-}
-
-th, td {
-    padding: 12px;
-    border: 1px solid #ddd;
-    text-align: center;
-}
-
-th {
-    background-color: #007bff;
-    color: white;
-}
-
+/* Additional Styling for Long Text in Table */
 td {
-    background-color: #f9f9f9;
+    overflow-wrap: break-word; /* Ensures long text breaks onto the next line */
+    word-wrap: break-word;  /* For cross-browser support */
+    max-width: 250px; /* Limit the width of columns to ensure text wraps correctly */
 }
 
-tr:nth-child(even) td {
-    background-color: #f2f2f2;
-}
+/* Optional: Make sure the table is responsive on smaller screens */
+@media screen and (max-width: 768px) {
+    table {
+        width: 100%; /* Ensure the table is responsive on smaller screens */
+    }
 
-tr:hover {
-    background-color: #f1f1f1;
+    th, td {
+        font-size: 14px; /* Make font smaller on smaller screens */
+    }
 }
