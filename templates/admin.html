@@ -5,32 +5,98 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEJuf+5T+5ZB82gttA5nv7v1G+FtxD5YO0d5p5P2dkOGz4HjTDCy7v5mI5pVm" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <style>
-        /* General Styling */
+        /* Global Styling */
         body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f8f9fa;
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #3a8dff, #55c9f7);
+            background-size: 400% 400%;
+            animation: gradientBackground 10s ease infinite;
+            color: #333;
         }
+
+        @keyframes gradientBackground {
+            0% { background-position: 100% 0; }
+            50% { background-position: 0 100%; }
+            100% { background-position: 100% 0; }
+        }
+
+        .container {
+            margin-top: 30px;
+        }
+
+        /* Header Animations */
         h1, p {
             text-align: center;
-            color: #343a40;
+            color: #fff;
+            font-weight: 600;
+            opacity: 0;
+            transform: translateY(-50px);
+            animation: fadeInHeader 1s ease-out forwards;
+        }
+
+        h1 {
+            font-size: 3rem;
+        }
+
+        p {
+            font-size: 1.25rem;
+            animation-delay: 0.5s;
+        }
+
+        @keyframes fadeInHeader {
+            0% {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* Card Styling */
         .card {
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            transition: transform 0.5s ease, box-shadow 0.5s ease, opacity 0.5s ease;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInCard 0.8s ease-out forwards;
         }
+
+        @keyframes fadeInCard {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         .card-body {
             text-align: center;
-            padding: 30px 20px;
+            padding: 30px;
         }
+
         .card-title {
             font-weight: 600;
             font-size: 1.5rem;
             color: #007bff;
             margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        /* Card Hover Effect */
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
         }
 
         /* Button Styling */
@@ -39,47 +105,95 @@
             padding: 10px 20px;
             font-size: 1rem;
             margin: 10px 0;
-            text-align: center;
-        }
-        .btn-custom:hover {
-            background-color: #007bff;
-            color: white;
-            transform: scale(1.05);
-            transition: 0.3s;
+            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+            opacity: 0;
+            animation: fadeInButton 1s ease-out forwards;
         }
 
-        /* Logout Button Styling */
+        @keyframes fadeInButton {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .btn-custom:hover {
+            background-color: #0056b3;
+            transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
         .btn-logout {
-            width: auto;
             padding: 10px 20px;
             font-size: 1rem;
-            margin: 10px 0;
-            text-align: center;
             background-color: #dc3545;
             color: white;
+            border: none;
+            width: auto;
+            margin-top: 15px;
+            transition: transform 0.3s ease, background-color 0.3s ease;
         }
+
         .btn-logout:hover {
             background-color: #c82333;
-            color: white;
             transform: scale(1.05);
-            transition: 0.3s;
         }
 
-        /* Grouping and Layout */
-        .container {
-            margin-top: 30px;
-        }
-        .row {
-            margin-top: 20px;
-        }
-        .col-md-4 {
-            margin-bottom: 15px;
+        /* Table Styles */
+        table {
+            width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+            border-collapse: collapse;
+            border-radius: 10px;
+            opacity: 0;
+            animation: fadeInCard 1s ease-out forwards;
         }
 
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .card-body {
-                padding: 20px;
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+            transition: background-color 0.3s ease;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        th:hover {
+            background-color: #0056b3;
+        }
+
+        td {
+            background-color: #f9f9f9;
+        }
+
+        tr:nth-child(even) td {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover td {
+            background-color: #f1f1f1;
+        }
+
+        /* Optional: Responsive design */
+        @media screen and (max-width: 768px) {
+            table {
+                width: 100%;
+            }
+
+            .col-md-4 {
+                margin-bottom: 20px;
+            }
+
+            .btn-custom {
+                width: 100%;
             }
         }
     </style>
@@ -90,12 +204,14 @@
         <!-- Logout Button -->
         <div class="row">
             <div class="col-md-12 text-center">
-                <button onclick="location.href='/'" class="btn btn-logout">Logout</button>
+                <button onclick="location.href='/'" class="btn btn-logout">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
             </div>
         </div>
 
-        <h1>Admin Dashboard</h1>
-        <p>Manage your admin tasks here.</p>
+        <h1 class="animate__animated animate__fadeIn">Admin Dashboard</h1>
+        <p class="animate__animated animate__slideIn">Manage your admin tasks here.</p>
 
         <!-- Row for Customer & Store Management -->
         <div class="row">
@@ -103,11 +219,11 @@
             <div class="col-md-4">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Customer Management</h5>
+                        <h5 class="card-title"><i class="fas fa-users"></i> Customer Management</h5>
                         <button onclick="location.href='/view_customers'" class="btn btn-primary btn-custom">View Customers</button>
                         <button onclick="location.href='/view_customer_accounts'" class="btn btn-primary btn-custom">View Customer Accounts</button>
                         <button onclick="location.href='/list_accounts_by_plan'" class="btn btn-primary btn-custom">List Accounts by Plan</button>
-                        <button onclick="location.href='/show_account_usage'" class="btn btn-primary btn-custom">Show Account Usage</button> <!-- Added Button -->
+                        <button onclick="location.href='/show_account_usage'" class="btn btn-primary btn-custom">Show Account Usage</button>
                     </div>
                 </div>
             </div>
@@ -116,7 +232,7 @@
             <div class="col-md-4">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Store Management</h5>
+                        <h5 class="card-title"><i class="fas fa-store"></i> Store Management</h5>
                         <button onclick="location.href='/view_stores'" class="btn btn-primary btn-custom">View Stores</button>
                     </div>
                 </div>
@@ -126,7 +242,7 @@
             <div class="col-md-4">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Ticket Management</h5>
+                        <h5 class="card-title"><i class="fas fa-ticket-alt"></i> Ticket Management</h5>
                         <button onclick="location.href='/view_resolved_tickets'" class="btn btn-primary btn-custom">View Resolved Tickets</button>
                     </div>
                 </div>
@@ -139,7 +255,7 @@
             <div class="col-md-4">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Payment Management</h5>
+                        <h5 class="card-title"><i class="fas fa-credit-card"></i> Payment Management</h5>
                         <button onclick="location.href='/view_all_payments'" class="btn btn-primary btn-custom">View All Payments</button>
                         <button onclick="location.href='/view_cashback_transactions'" class="btn btn-primary btn-custom">View Cashback Transactions</button>
                         <button onclick="location.href='/view_accepted_payments'" class="btn btn-primary btn-custom">View Accepted Payments</button>
@@ -151,7 +267,7 @@
             <div class="col-md-4">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Statistics & Benefits</h5>
+                        <h5 class="card-title"><i class="fas fa-chart-line"></i> Statistics & Benefits</h5>
                         <button onclick="location.href='/view_avg_transfer'" class="btn btn-primary btn-custom">View Avg Transfer</button>
                         <button onclick="location.href='/view_cashback_by_wallet_and_plan'" class="btn btn-primary btn-custom">View Cashback by Wallet & Plan</button>
                         <button onclick="location.href='/remove_benefits'" class="btn btn-primary btn-custom">Remove Benefits</button>
@@ -163,7 +279,7 @@
             <div class="col-md-4">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Wallet & Points Management</h5>
+                        <h5 class="card-title"><i class="fas fa-wallet"></i> Wallet & Points Management</h5>
                         <button onclick="location.href='/view_wallets'" class="btn btn-primary btn-custom">View Wallets</button>
                         <button onclick="location.href='/check_wallet_linkage'" class="btn btn-primary btn-custom">Check Wallet Linkage</button>
                         <button onclick="location.href='/update_points'" class="btn btn-primary btn-custom">Update Points</button>
@@ -174,11 +290,10 @@
 
         <!-- Row for SMS Management -->
         <div class="row">
-            <!-- SMS Offers -->
             <div class="col-md-4">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">SMS Management</h5>
+                        <h5 class="card-title"><i class="fas fa-sms"></i> SMS Management</h5>
                         <button onclick="location.href='/list_sms_offers'" class="btn btn-primary btn-custom">List SMS Offers</button>
                     </div>
                 </div>
@@ -190,7 +305,7 @@
             <div class="col-md-4">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">E-Shop Management</h5>
+                        <h5 class="card-title"><i class="fas fa-shopping-cart"></i> E-Shop Management</h5>
                         <button onclick="location.href='/view_eshops'" class="btn btn-primary btn-custom">View Eshops</button>
                     </div>
                 </div>

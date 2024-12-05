@@ -1,23 +1,73 @@
 /* Global Styles */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Arial', sans-serif;
     text-align: center;
-    background-color: #f4f4f9;
+    background: linear-gradient(135deg, #3a8dff, #55c9f7); /* Gradient background */
+    background-size: 400% 400%;
+    animation: gradientBackground 10s ease infinite; /* Gradient Animation */
     color: #333;
+    margin: 0;
+    padding: 0;
+    transition: all 0.3s ease;
 }
 
+/* Gradient Animation */
+@keyframes gradientBackground {
+    0% { background-position: 100% 0; }
+    50% { background-position: 0 100%; }
+    100% { background-position: 100% 0; }
+}
+
+/* Title and Text Animations */
 h1 {
-    color: #007bff;
+    font-size: 3rem;
+    color: #fff;
+    opacity: 0;
+    animation: fadeIn 2s ease-out forwards;
+}
+
+p {
+    font-size: 1.25rem;
+    color: #fff;
+    opacity: 0;
+    animation: slideIn 2s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    0% {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
 /* Table Styles */
 table {
-    width: 90%; /* Increased width for better visibility */
+    width: 90%;
     margin-left: auto;
     margin-right: auto;
     margin-top: 20px;
     border-collapse: collapse;
-    table-layout: auto; /* Let columns adjust according to content */
+    table-layout: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add subtle shadow */
+    background-color: rgba(255, 255, 255, 0.8); /* Slight transparent background */
+    overflow: hidden;
+    transition: box-shadow 0.3s ease-in-out;
 }
 
 /* Table Header and Data Cells */
@@ -25,17 +75,20 @@ th, td {
     padding: 12px;
     border: 1px solid #ddd;
     text-align: left;
-    word-wrap: break-word; /* Ensure content doesn't overflow */
-    white-space: normal;  /* Allow text to break across multiple lines if needed */
+    word-wrap: break-word;
+    white-space: normal;
 }
 
 th {
     background-color: #007bff;
     color: white;
+    font-size: 1.1rem;
+    transition: background-color 0.3s ease;
 }
 
 td {
     background-color: #f9f9f9;
+    font-size: 1rem;
 }
 
 tr:nth-child(even) td {
@@ -44,49 +97,108 @@ tr:nth-child(even) td {
 
 tr:hover {
     background-color: #f1f1f1;
+    transform: scale(1.02);
+    transition: transform 0.3s ease;
+}
+
+th:hover {
+    background-color: #0056b3;
 }
 
 /* Button Styles */
 .btn-primary, .btn-secondary {
-    padding: 10px 20px;
+    padding: 12px 24px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
     color: #fff;
     margin-top: 10px;
+    transition: transform 0.2s ease, background-color 0.3s ease;
+    display: inline-block;
 }
 
+/* Primary Button */
 .btn-primary {
     background-color: #007bff;
 }
 
+.btn-primary:hover {
+    background-color: #0056b3;
+    transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
+/* Secondary Button */
 .btn-secondary {
     background-color: #6c757d;
 }
 
-.btn-primary:hover {
-    background-color: #0056b3;
-}
-
 .btn-secondary:hover {
     background-color: #5a6268;
+    transform: scale(1.05);
+}
+
+/* Button Press Animation */
+.btn-primary:active, .btn-secondary:active {
+    transform: scale(0.98);
 }
 
 /* Additional Styling for Long Text in Table */
 td {
-    overflow-wrap: break-word; /* Ensures long text breaks onto the next line */
-    word-wrap: break-word;  /* For cross-browser support */
-    max-width: 250px; /* Limit the width of columns to ensure text wraps correctly */
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    max-width: 250px;
 }
 
-/* Optional: Make sure the table is responsive on smaller screens */
+/* Make sure the table is responsive on smaller screens */
 @media screen and (max-width: 768px) {
     table {
-        width: 100%; /* Ensure the table is responsive on smaller screens */
+        width: 100%;
     }
 
     th, td {
-        font-size: 14px; /* Make font smaller on smaller screens */
+        font-size: 14px;
     }
+}
+
+/* Fun Hover Effects */
+.card:hover, .btn-custom:hover {
+    transform: scale(1.05); /* Enlarge cards and buttons */
+    transition: transform 0.3s ease;
+}
+
+/* Apply a background blur effect on the main container */
+.container {
+    backdrop-filter: blur(10px); /* Adds blur effect behind the content */
+    background-color: rgba(255, 255, 255, 0.6); /* Transparent background */
+    border-radius: 15px;
+    padding: 20px;
+    margin-top: 40px;
+    transition: all 0.3s ease;
+}
+
+/* Enhance Table Row Hover */
+tr:hover {
+    background-color: #e9ecef;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transform: translateY(-5px);
+    transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Card Styling */
+.card {
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.8); /* Slightly transparent */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Apply Soft Transitions */
+* {
+    transition: all 0.3s ease;
 }

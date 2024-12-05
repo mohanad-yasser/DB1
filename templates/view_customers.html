@@ -3,57 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Customer Accounts and Subscribed Plans</title>
+    <title>Customer Profiles</title>
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
-    <h1>Customer Accounts and Subscribed Plans</h1>
+    <h1>Customer Profiles</h1>
     <table border="1">
         <thead>
             <tr>
-                <th>Mobile Number</th>
-                <th>Password</th>
-                <th>Balance</th>
-                <th>Account Type</th>
-                <th>Start Date</th>
-                <th>Status</th>
-                <th>Points</th>
                 <th>National ID</th>
-                <th>Plan ID</th>
-                <th>Plan Name</th>
-                <th>Plan Price</th>
-                <th>SMS Offered</th>
-                <th>Minutes Offered</th>
-                <th>Data Offered</th>
-                <th>Description</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Address</th>
+                <th>Date of Birth</th>
+                <th>Mobile Number</th>
+                <th>Account Type</th>
+                <th>Account Status</th>
+                <th>Start Date</th>
+                <th>Balance</th>
+                <th>Points</th>
             </tr>
         </thead>
         <tbody>
-            {% if accounts %}
-                {% for account in accounts %}
-                <tr>
-                    <td>{{ account.mobileNo }}</td>
-                    <td>{{ account.pass }}</td>
-                    <td>{{ account.balance }}</td>
-                    <td>{{ account.account_type }}</td>
-                    <td>{{ account.start_date }}</td>
-                    <td>{{ account.status }}</td>
-                    <td>{{ account.points }}</td>
-                    <td>{{ account.nationalID }}</td>
-                    <td>{{ account.planID }}</td>
-                    <td>{{ account.name }}</td>
-                    <td>{{ account.price }}</td>
-                    <td>{{ account.SMS_offered }}</td>
-                    <td>{{ account.minutes_offered }}</td>
-                    <td>{{ account.data_offered }}</td>
-                    <td>{{ account.description }}</td>
-                </tr>
-                {% endfor %}
-            {% else %}
-                <tr>
-                    <td colspan="15">No account data available.</td>
-                </tr>
-            {% endif %}
+            {% for customer in customers %}
+            <tr>
+                <td>{{ customer.nationalID }}</td>
+                <td>{{ customer.first_name }}</td>
+                <td>{{ customer.last_name }}</td>
+                <td>{{ customer.email }}</td>
+                <td>{{ customer.address }}</td>
+                <td>{{ customer.date_of_birth }}</td>
+                <td>{{ customer.mobileNo }}</td>
+                <td>{{ customer.account_type }}</td>
+                <td>{{ customer.status }}</td>
+                <td>{{ customer.start_date }}</td>
+                <td>{{ customer.balance }}</td>
+                <td>{{ customer.points }}</td>
+            </tr>
+            {% endfor %}
         </tbody>
     </table>
     <a href="/admin" class="btn btn-primary">Back to Admin Dashboard</a>

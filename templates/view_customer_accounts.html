@@ -9,36 +9,52 @@
 <body>
     <h1>Customer Accounts and Subscribed Plans</h1>
     <table border="1">
-        <tr>
-            <th>Mobile Number</th>
-            <th>Account Type</th>
-            <th>Account Status</th>
-            <th>Start Date</th>
-            <th>Balance</th>
-            <th>Points</th>
-            <th>Plan Name</th>
-            <th>Plan Price</th>
-            <th>Subscription Status</th>
-        </tr>
-        {% if accounts %}
-            {% for account in accounts %}
+        <thead>
             <tr>
-                <td>{{ account.mobileNo }}</td>
-                <td>{{ account.account_type }}</td>
-                <td>{{ account.status }}</td>
-                <td>{{ account.start_date }}</td>
-                <td>{{ account.balance }}</td>
-                <td>{{ account.points }}</td>
-                <td>{{ account.plan_name }}</td>
-                <td>{{ account.plan_price }}</td>
-                <td>{{ account.subscription_status }}</td>
+                <th>Mobile Number</th>
+                <th>Password</th>
+                <th>Balance</th>
+                <th>Account Type</th>
+                <th>Start Date</th>
+                <th>Account Status</th>
+                <th>Points</th>
+                <th>National ID</th>
+                <th>Plan ID</th>
+                <th>Plan Name</th>
+                <th>Plan Price</th>
+                <th>SMS Offered</th>
+                <th>Minutes Offered</th>
+                <th>Data Offered</th>
+                <th>Plan Description</th>
             </tr>
-            {% endfor %}
-        {% else %}
-            <tr>
-                <td colspan="9">No account data available.</td>
-            </tr>
-        {% endif %}
+        </thead>
+        <tbody>
+            {% if accounts %}
+                {% for account in accounts %}
+                <tr>
+                    <td>{{ account.mobileNo }}</td>                  <!-- Customer Mobile No -->
+                    <td>{{ account.pass }}</td>                       <!-- Account Password -->
+                    <td>{{ account.balance }}</td>                   <!-- Account Balance -->
+                    <td>{{ account.account_type }}</td>              <!-- Account Type (Postpaid/Prepaid) -->
+                    <td>{{ account.start_date }}</td>                <!-- Account Start Date -->
+                    <td>{{ account.status }}</td>                    <!-- Account Status (Active/OnHold) -->
+                    <td>{{ account.points }}</td>                    <!-- Account Points -->
+                    <td>{{ account.nationalID }}</td>                 <!-- Customer National ID -->
+                    <td>{{ account.planID }}</td>                     <!-- Plan ID -->
+                    <td>{{ account.name }}</td>                       <!-- Plan Name -->
+                    <td>{{ account.price }}</td>                      <!-- Plan Price -->
+                    <td>{{ account.SMS_offered }}</td>                <!-- SMS Offered by Plan -->
+                    <td>{{ account.minutes_offered }}</td>            <!-- Minutes Offered by Plan -->
+                    <td>{{ account.data_offered }}</td>               <!-- Data Offered by Plan -->
+                    <td>{{ account.description }}</td>                <!-- Plan Description -->
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="15">No account data available.</td>  <!-- No Data Found -->
+                </tr>
+            {% endif %}
+        </tbody>
     </table>
     <a href="/admin" class="btn btn-primary">Back to Admin Dashboard</a>
 </body>
