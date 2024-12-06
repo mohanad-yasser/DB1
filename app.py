@@ -149,7 +149,6 @@ def view_customer_accounts():
         return f"Error retrieving customer accounts: {str(e)}"
 
     
-from sqlalchemy import text
 
 @app.route('/list_accounts_by_plan', methods=['GET', 'POST'])
 def list_accounts_by_plan():
