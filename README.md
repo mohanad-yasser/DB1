@@ -1,4 +1,4 @@
-# 📞 Telecom Customer Data Management System  
+# 📞 Telecom Database Management System  
 
 This project aims to streamline customer data, service usage, and financial transactions for a telecom company, providing a seamless experience for admins and customers.  
 
