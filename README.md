@@ -73,5 +73,12 @@ This system empowers customers with a user-friendly platform to monitor service 
 - **Backend**: Python (Flask) for API development and integration.  
 - **Frontend**: HTML, CSS, and JavaScript for responsive web interfaces.  
 
+---
 
+## 👀 Peek at the UI 
 
+![loginas](https://github.com/user-attachments/assets/d6d56e6d-496c-4631-beec-534eadf80180)
+![admin dashboard](https://github.com/user-attachments/assets/cffee86a-ce60-4e1e-ab0a-08d0bb8f38cb)
+![csut prof](https://github.com/user-attachments/assets/92037b8a-c759-41eb-97b2-39c1c37bc62d)
+![cust prof](https://github.com/user-attachments/assets/b7134381-7038-4dfc-836b-cfd8f7107797)
+![avg trans](https://github.com/user-attachments/assets/48109ee3-84db-4218-85bd-6a6fa181c7e1)
